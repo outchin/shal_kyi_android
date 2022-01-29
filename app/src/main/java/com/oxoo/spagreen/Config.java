@@ -1,0 +1,32 @@
+package com.oxoo.spagreen;
+
+public class Config {
+
+    // copy your api url from php admin dashboard & paste below
+    public static final String API_SERVER_URL = "http://demo.redtvlive.com/oxoo/v12/rest-api/";
+
+    //copy your api key from php admin dashboard & paste below
+    public static final String API_KEY = "oyktaah8kjh8y6inf81rnn8g";
+
+    //copy your terms url from php admin dashboard & paste below
+    public static final String TERMS_URL = "http://demo.redtvlive.com/oxoo/v12/terms/";
+
+    //youtube video auto play
+    public static boolean YOUTUBE_VIDEO_AUTO_PLAY = false;
+
+    //enable external button on player
+    public static final boolean ENABLE_EXTERNAL_PLAYER = false;
+
+    //default theme
+    public static boolean DEFAULT_DARK_THEME_ENABLE = true;
+
+    // First, you have to configure firebase to enable facebook, phone and google login
+    // facebook authentication
+    public static final boolean ENABLE_FACEBOOK_LOGIN = true;
+
+    //Phone authentication
+    public static final boolean ENABLE_PHONE_LOGIN = true;
+
+    //Google authentication
+    public static final boolean ENABLE_GOOGLE_LOGIN = true;
+}

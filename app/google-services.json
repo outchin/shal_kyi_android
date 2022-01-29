@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "482297608091",
+    "firebase_url": "https://mystical-moon-183306.firebaseio.com",
+    "project_id": "mystical-moon-183306",
+    "storage_bucket": "mystical-moon-183306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482297608091:android:5bab38892b581dfd29133e",
+        "android_client_info": {
+          "package_name": "com.oxoo.spagreen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482297608091-k7i8q3keoqchde12jfoj4mbr5t3q2nua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTB2bE3Rc3O2_35xxyBOU772jFzTqbDBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482297608091-k7i8q3keoqchde12jfoj4mbr5t3q2nua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
