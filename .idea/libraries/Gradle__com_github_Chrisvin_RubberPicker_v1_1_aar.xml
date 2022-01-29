@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.Chrisvin:RubberPicker:v1.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ee8bfee984084110141361134a0c6ea3/jetified-RubberPicker-v1.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ee8bfee984084110141361134a0c6ea3/jetified-RubberPicker-v1.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ee8bfee984084110141361134a0c6ea3/jetified-RubberPicker-v1.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d9a59a10f2ffbe9311681b425dd93c4d/jetified-RubberPicker-v1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d9a59a10f2ffbe9311681b425dd93c4d/jetified-RubberPicker-v1.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d9a59a10f2ffbe9311681b425dd93c4d/jetified-RubberPicker-v1.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
