@@ -9,14 +9,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Query;
 
-public interface MovieApi {
+public interface HighlightsApi {
 
     @GET("movies")
     Call<List<Video>> getMovies(@Header("API-KEY") String apiKey,
-                                @Query("page") int pahe);
-
-    @GET("highlights")
-    Call<List<Video>> getHighlights(@Header("API-KEY") String apiKey,
                                 @Query("page") int pahe);
 
     @GET("content_by_genre_id")

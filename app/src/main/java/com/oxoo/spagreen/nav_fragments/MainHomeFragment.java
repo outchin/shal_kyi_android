@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.oxoo.spagreen.MainActivity;
 import com.oxoo.spagreen.R;
+import com.oxoo.spagreen.fragments.HighlightsFragment;
 import com.oxoo.spagreen.fragments.HomeFragment;
 import com.oxoo.spagreen.fragments.LiveTvFragment;
 import com.oxoo.spagreen.fragments.MoviesFragment;
@@ -70,15 +71,18 @@ public class MainHomeFragment extends Fragment {
                         loadFragment(new HomeFragment());
                         break;
                     case 1:
-                        loadFragment(new MoviesFragment());
+                        loadFragment(new HighlightsFragment());
                         break;
                     case 2:
-                        loadFragment(new LiveTvFragment());
+                        loadFragment(new MoviesFragment());
                         break;
                     case 3:
-                        loadFragment(new TvSeriesFragment());
+                        loadFragment(new LiveTvFragment());
                         break;
                     case 4:
+                        loadFragment(new TvSeriesFragment());
+                        break;
+                    case 5:
                         loadFragment(new FavoriteFragment());
                         break;
 
