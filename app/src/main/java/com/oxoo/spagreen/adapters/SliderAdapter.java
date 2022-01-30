@@ -38,7 +38,13 @@ public class SliderAdapter extends CardSliderAdapter<Slide> {
 
             textView.setText(slide.getTitle());
             RoundedImageView imageView = view.findViewById(R.id.imageview);
-            Picasso.get().load(slide.getImageLink()).into(imageView);
+            System.out.print("image link " + slide.getImageLink());
+            try{
+                Picasso.get().load(slide.getImageLink()).into(imageView);
+            }catch(Exception e){
+                Picasso.get().load(R.drawable.shalkyi_thumbnail).into(imageView);
+            }
+
             View lyt_parent = view.findViewById(R.id.lyt_parent);
             lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override

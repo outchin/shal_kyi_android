@@ -7,9 +7,9 @@
     <string name="contact_email">info@spagreen.net</string>
     <string name="copyright_text">Copyright @ Spagreen \nAll right reserved</string>
     <!--    Facebook Login-->
-    <string name="facebook_app_id">2636609453333120</string>
-    <string name="fb_login_protocol_scheme">fb2636609453333120</string>
-    <string name="facebook_application_id" translatable="false">2636609453333120</string>
+    <string name="facebook_app_id">788806335202618</string>
+    <string name="fb_login_protocol_scheme">fb788806335202618</string>
+    <string name="facebook_application_id" translatable="false">788806335202618</string>
     <!--    adMob-->
     <string name="admob_application_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
     <!-- App -->
@@ -287,6 +287,9 @@
     <string name="failed_to_communicate">Failed to communicate with server. \nPlease check your API configuration</string>
     <string name="no_configuration_data_found">No configuration data found.</string>
     <string name="please_login_first_to_see_favorite_list">Please login to see favorite list.</string>
+    <string name="welcome_text">Welcome to MySpectrum</string>
+    <string name="continue_bold"><b>Continue</b></string>
+    <string name="buy_code_bold"><b>Code ဝယ်ရန်</b></string>
 
 
 </resources>

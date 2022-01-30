@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -55,9 +56,16 @@ public class SplashScreenActivity extends AppCompatActivity {
     private Thread timer;
     private DatabaseHelper db;
 
+    public String userCode;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("push", MODE_PRIVATE);
+        SharedPreferences userCodeSharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+        userCode = userCodeSharedPreferences.getString(Constants.USER_CODE, "zero");
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -65,7 +73,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         db = new DatabaseHelper(SplashScreenActivity.this);
 
         //print keyHash for facebook login
-       // createKeyHash(SplashScreenActivity.this, BuildConfig.APPLICATION_ID);
+        // createKeyHash(SplashScreenActivity.this, BuildConfig.APPLICATION_ID);
 
 
         // checking storage permission
@@ -85,24 +93,23 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-
-                    if (PreferenceUtils.isLoggedIn(SplashScreenActivity.this)) {
+                    if(db.getConfigurationData().getAppConfig().getGenreVisible())  //free show day
+                    {
                         Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);
                         finish();
-                    } else {
-
-                        if (isLoginMandatory()) {
-                            Intent intent = new Intent(SplashScreenActivity.this, FirebaseSignUpActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    }else
+                    {
+                        if(userCode.equals("zero")) //user have no account
+                        {
+                            Intent intent = new Intent(SplashScreenActivity.this, VerificationActivity.class);
                             startActivity(intent);
                             finish();
-                        } else {
+                        }else
+                        {
                             Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -119,18 +126,27 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public boolean isLoginMandatory() {
+
         return db.getConfigurationData().getAppConfig().getMandatoryLogin();
     }
 
     public void getConfigurationData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+        String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
+
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         ConfigurationApi api = retrofit.create(ConfigurationApi.class);
         Call<Configuration> call = api.getConfigurationData(Config.API_KEY);
         call.enqueue(new Callback<Configuration>() {
+            
             @Override
 
             public void onResponse(Call<Configuration> call, Response<Configuration> response) {
-                if (response.code() == 200) {
+
+
+                System.out.println(response);
+                if (true) {  //zws
+                    //if (true) {
                     Configuration configuration = response.body();
                     if (configuration != null) {
 
@@ -148,11 +164,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                         db.deleteAllDownloadData();
                         db.deleteAllAppConfig();
                         db.insertConfigurationData(configuration);
+
                         //apk update check
                         if (isNeedUpdate(configuration.getApkUpdateInfo().getVersionCode())) {
                             showAppUpdateDialog(configuration.getApkUpdateInfo());
                             return;
                         }
+
+
+
 
                         if (db.getConfigurationData() != null) {
                             timer.start();
@@ -164,28 +184,30 @@ public class SplashScreenActivity extends AppCompatActivity {
                     } else {
                         //new ToastMsg(SplashScreenActivity.this).toastIconError(getString(R.string.something_went_text));
                         //finish();
-                        showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate));
+                        showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate) + "1");
                     }
                 } else {
                     //new ToastMsg(SplashScreenActivity.this).toastIconError(getString(R.string.error_toast));
                     // finish();
-                    showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate));
+                    showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate) + "2");
                 }
             }
 
             @Override
             public void onFailure(Call<Configuration> call, Throwable t) {
                 Log.e("ConfigError", t.getLocalizedMessage());
+                Log.e("err", String.valueOf(call));
                 /*new ToastMsg(SplashScreenActivity.this).toastIconError(getString(R.string.error_toast));
                 finish();*/
-                showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate));
+                showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate) + " 3");
             }
         });
     }
 
     private void showAppUpdateDialog(final ApkUpdateInfo info) {
         new AlertDialog.Builder(this)
-                .setTitle("New version: " + info.getVersionName())
+                //.setTitle("New version: " + info.getVersionName())
+                .setTitle(  info.getVersionName())
                 .setMessage(info.getWhatsNew())
                 .setPositiveButton("Update Now", new DialogInterface.OnClickListener() {
                     @Override
@@ -235,7 +257,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
     private boolean isNeedUpdate(String versionCode) {
-        return Integer.parseInt(versionCode) > BuildConfig.VERSION_CODE;
+
+        return Integer.parseInt(versionCode) > 33;
     }
 
     // ------------------ checking storage permission ------------

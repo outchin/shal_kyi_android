@@ -15,6 +15,8 @@ public class Constants {
     public static final String ADMOB = "admob";
     public static final String START_APP = "startApp";
     public static final String NETWORK_AUDIENCE = "fan";
+    public static final String USER_CODE = "userCode";
+    public static final String REG_END_DATE = "registrationEndAt";
 
     public static String workId;
 

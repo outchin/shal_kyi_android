@@ -3,13 +3,15 @@ package com.oxoo.spagreen;
 public class Config {
 
     // copy your api url from php admin dashboard & paste below
-    public static final String API_SERVER_URL = "http://demo.redtvlive.com/oxoo/v12/rest-api/";
+    //public static final String API_SERVER_URL = "http://demo.redtvlive.com/oxoo/v12/rest-api/";
+    public static final String API_SERVER_URL = "https://trnawnawbackup.click/mmsportlivetv/rest-api/";
 
     //copy your api key from php admin dashboard & paste below
-    public static final String API_KEY = "oyktaah8kjh8y6inf81rnn8g";
+    public static final String API_KEY = "5bbi9mbh3pqmzmlom2vgbeno";
 
     //copy your terms url from php admin dashboard & paste below
-    public static final String TERMS_URL = "http://demo.redtvlive.com/oxoo/v12/terms/";
+   // public static final String TERMS_URL = "http://demo.redtvlive.com/oxoo/v12/terms/";
+    public static final String TERMS_URL = "https://trnawnawbackup.click/mmsportlivetv/v12/terms/";
 
     //youtube video auto play
     public static boolean YOUTUBE_VIDEO_AUTO_PLAY = false;

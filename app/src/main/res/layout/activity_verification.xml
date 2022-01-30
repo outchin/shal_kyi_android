@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image_26" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <RelativeLayout
+                android:layout_margin="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                >
+
+                <TextView
+                    android:id="@+id/language"
+                    android:paddingEnd="@dimen/spacing_xxxlarge"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="17sp"
+                    android:text="EN"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/change_language"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+            <LinearLayout
+
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <!--                <View-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="@dimen/spacing_middle" />-->
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/logo_small2"
+                    app:tint="@android:color/white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_xlarge" />
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:gravity="center_horizontal"
+                    android:text="@string/welcome_text"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/amazon"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textColor="@color/white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_xxlarge" />
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accCodeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/amazon"
+                    android:hint="Code ရိုက်ထည့်ပါ"
+                    android:maxLength="6"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="@android:color/white"
+                    android:theme="@style/EditText.White" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_xlarge" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/checkCodeBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/btn_rounded_amber_before"
+                    android:clickable="false"
+                    android:fontFamily="@font/amazon"
+                    android:text="@string/continue_bold"
+
+                    android:textColor="@color/white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_middle" />
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/getCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/btn_rounded_amber_before"
+                    android:gravity="center"
+                    android:fontFamily="@font/amazon"
+                    android:paddingHorizontal="@dimen/spacing_xlarge"
+                    android:paddingVertical="@dimen/spacing_middle"
+                    android:text="@string/buy_code_bold"
+
+                    android:textColor="@color/white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_xlarge" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSkip"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/spacing_mlarge"
+                    android:background="@drawable/btn_rounded_primary_outline_flex"
+                    android:text="၁၀ ရက် Free ကြည့်ရန်"
+                    android:textColor="@android:color/white" />
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_xxxlarge" />
+
+
+                <TextView
+                    android:id="@+id/need_help"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:gravity ="center_horizontal"
+                    android:textSize="13sp"
+                    android:text="အကူအညီရယူနိုင်ရန် Page Messenger တွင် လာရောက် မေးမြန်းနိုင်ပါတယ်ခင်ဗျာ"
+                    android:layout_marginBottom="@dimen/spacing_xsmall"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/grey_20" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="10dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

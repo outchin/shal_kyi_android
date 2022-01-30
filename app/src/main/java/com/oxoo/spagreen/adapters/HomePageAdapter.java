@@ -51,7 +51,12 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.Origin
 
         final CommonModels obj = items.get(position);
         holder.name.setText(obj.getTitle());
-        Picasso.get().load(obj.getImageUrl()).placeholder(R.drawable.poster_placeholder).into(holder.image);
+        try{
+            Picasso.get().load(obj.getImageUrl()).placeholder(R.drawable.poster_placeholder).into(holder.image);
+        }catch(Exception e){
+            Picasso.get().load(R.drawable.shalkyi_thumbnail).placeholder(R.drawable.poster_placeholder).into(holder.image);
+        }
+
 
         holder.qualityTv.setText(obj.getQuality());
         holder.releaseDateTv.setText(obj.getReleaseDate());
