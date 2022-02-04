@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-xhdpi/ic_monitor.xml" value="0.202" />
         <entry key="app/src/main/res/layout/active_subscription_layout.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/activity_details.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/activity_details_highlights.xml" value="0.18177083333333333" />
@@ -25,11 +26,14 @@
         <entry key="app/src/main/res/layout/dialog_info.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/dialog_term_of_services.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/fragment_highlights.xml" value="0.161231884057971" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/fragment_livetv.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/item_grid_image_albums.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/item_grid_image_albums_movies.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/toolbar_no_search.xml" value="0.24322916666666666" />
+        <entry key="app/src/main/res/menu/menu_action.xml" value="0.24322916666666666" />
+        <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.24322916666666666" />
       </map>
     </option>
   </component>

@@ -79,7 +79,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.Origin
                     }
                 }else {
                     Intent intent=new Intent(ctx, DetailsActivity.class);
-                    intent.putExtra("vType",obj.getVideoType());
+                    intent.putExtra("vType","movie_1");
                     intent.putExtra("id",obj.getId());
 
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -7,7 +7,7 @@
         android:icon="@drawable/icon_home"/>
     <item
         android:title="@string/highlights"
-        android:icon="@drawable/icon_movie"/>
+        android:icon="@drawable/ic_monitor"/>
     <item
         android:title="@string/movie"
         android:icon="@drawable/icon_movie"/>
