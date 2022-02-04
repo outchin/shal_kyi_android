@@ -1,42 +1,29 @@
 package com.oxoo.spagreen.adapters;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.oxoo.spagreen.DetailsActivity;
-import com.oxoo.spagreen.DetailsActivityHighlights;
 import com.oxoo.spagreen.LoginActivity;
 import com.oxoo.spagreen.R;
 import com.oxoo.spagreen.models.CommonModels;
-
 import com.oxoo.spagreen.utils.ItemAnimation;
 import com.oxoo.spagreen.utils.PreferenceUtils;
-import com.squareup.picasso.LruCache;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Request;
-import com.squareup.picasso.RequestCreator;
-import com.squareup.picasso.StatsSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.ACTIVITY_SERVICE;
-
-public class CommonGridAdapter extends RecyclerView.Adapter<CommonGridAdapter.OriginalViewHolder> {
+public class CommonGridAdapterMovies extends RecyclerView.Adapter<CommonGridAdapterMovies.OriginalViewHolder> {
 
     private List<CommonModels> items = new ArrayList<>();
     private Context ctx;
@@ -46,24 +33,24 @@ public class CommonGridAdapter extends RecyclerView.Adapter<CommonGridAdapter.Or
     private int animation_type = 2;
 
 
-    public CommonGridAdapter(Context context, List<CommonModels> items) {
+    public CommonGridAdapterMovies(Context context, List<CommonModels> items) {
         this.items = items;
         ctx = context;
     }
 
 
     @Override
-    public CommonGridAdapter.OriginalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommonGridAdapterMovies.OriginalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        CommonGridAdapter.OriginalViewHolder vh;
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_image_albums, parent, false);
+        CommonGridAdapterMovies.OriginalViewHolder vh;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_image_albums_movies, parent, false);
         vh = new OriginalViewHolder(v);
         return vh;
 
     }
 
     @Override
-    public void onBindViewHolder(CommonGridAdapter.OriginalViewHolder holder, final int position) {
+    public void onBindViewHolder(CommonGridAdapterMovies.OriginalViewHolder holder, final int position) {
         final CommonModels obj = items.get(position);
 
         holder.qualityTv.setText(obj.getQuality());
@@ -98,7 +85,7 @@ public class CommonGridAdapter extends RecyclerView.Adapter<CommonGridAdapter.Or
 
 
     private void goToDetailsActivity(CommonModels obj) {
-        Intent intent=new Intent(ctx, DetailsActivityHighlights.class);
+        Intent intent=new Intent(ctx,DetailsActivity.class);
         intent.putExtra("vType",obj.getVideoType());
         intent.putExtra("id",obj.getId());
         ctx.startActivity(intent);

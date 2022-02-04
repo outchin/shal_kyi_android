@@ -24,7 +24,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.oxoo.spagreen.Config;
 import com.oxoo.spagreen.MainActivity;
 import com.oxoo.spagreen.R;
-import com.oxoo.spagreen.adapters.CommonGridAdapter;
+import com.oxoo.spagreen.adapters.CommonGridAdapterMovies;
 import com.oxoo.spagreen.database.DatabaseHelper;
 import com.oxoo.spagreen.models.CommonModels;
 import com.oxoo.spagreen.models.home_content.Video;
@@ -49,7 +49,7 @@ public class MoviesFragment extends Fragment {
 
     private ShimmerFrameLayout shimmerFrameLayout;
     private RecyclerView recyclerView;
-    private CommonGridAdapter mAdapter;
+    private CommonGridAdapterMovies mAdapter;
     private List<CommonModels> list = new ArrayList<>();
 
     private ApiResources apiResources;
@@ -129,7 +129,7 @@ public class MoviesFragment extends Fragment {
         recyclerView.addItemDecoration(new SpacingItemDecoration(3, Tools.dpToPx(getActivity(), 0), true));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new CommonGridAdapter(getContext(), list);
+        mAdapter = new CommonGridAdapterMovies(getContext(), list);
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

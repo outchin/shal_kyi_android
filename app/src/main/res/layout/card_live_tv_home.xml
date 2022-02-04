@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
-    android:layout_width="122dp"
+    android:layout_width="138dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="2dp"
@@ -8,7 +8,7 @@
     android:id="@+id/lyt_parent"
     android:layout_margin="7dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <!--    android:layout_width="122dp"-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,10 +18,10 @@
             android:id="@+id/image"
             android:src="@drawable/image_16"
             android:layout_width="match_parent"
-            android:layout_height="67dp"
+            android:layout_height="76dp"
             android:scaleType="centerCrop"
-             />
-
+            />
+        <!--        android:layout_height="67dp"-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

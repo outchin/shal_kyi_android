@@ -124,6 +124,11 @@
             android:label="@string/title_activity_details"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- android:configChanges="screenLayout|screenSize|orientation" -->
         <activity
+            android:name=".DetailsActivityHighlights"
+            android:configChanges="screenLayout|screenSize|orientation"
+            android:label="@string/title_activity_details"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- android:configChanges="screenLayout|screenSize|orientation" -->
+        <activity
             android:name=".MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.Nobar"

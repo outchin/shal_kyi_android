@@ -3,14 +3,31 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/active_subscription_layout.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/activity_details.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/activity_details_highlights.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/activity_video_details.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/activity_video_details2.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/card_comment.xml" value="0.18177083333333333" />
-        <entry key="app/src/main/res/layout/card_episode_item.xml" value="0.75" />
+        <entry key="app/src/main/res/layout/card_episode_item.xml" value="0.33687258687258687" />
+        <entry key="app/src/main/res/layout/card_genre_home.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/card_home_view.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/card_home_view_highlights.xml" value="0.3423913043478261" />
+        <entry key="app/src/main/res/layout/card_live_tv.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/card_live_tv_home.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/card_nav_view.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/card_nav_view_2.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/card_reply.xml" value="0.15885416666666666" />
         <entry key="app/src/main/res/layout/content_details.xml" value="0.15885416666666666" />
+        <entry key="app/src/main/res/layout/content_details_highlights.xml" value="0.3423913043478261" />
+        <entry key="app/src/main/res/layout/content_item_show.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/content_reply.xml" value="0.15885416666666666" />
+        <entry key="app/src/main/res/layout/dialog_info.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/dialog_term_of_services.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/fragment_highlights.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/fragment_livetv.xml" value="0.24322916666666666" />
+        <entry key="app/src/main/res/layout/item_grid_image_albums.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/item_grid_image_albums_movies.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/toolbar_no_search.xml" value="0.24322916666666666" />
       </map>
