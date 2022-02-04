@@ -11,5 +11,7 @@ public interface SingleDetailsTVApi {
     @GET("single_details")
     Call<SingleDetailsTV> getSingleDetails(@Header("API-KEY") String key,
                                            @Query("type") String type,
-                                           @Query("id") String id);
+                                           @Query("id") String id,
+                                           @Query("device_id") String device_id,
+                                           @Query("code") String code);
 }

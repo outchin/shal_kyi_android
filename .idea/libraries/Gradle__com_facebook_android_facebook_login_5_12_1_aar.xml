@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1812817ab58266365a1824dbe2093230/jetified-facebook-login-5.12.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1812817ab58266365a1824dbe2093230/jetified-facebook-login-5.12.1/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1812817ab58266365a1824dbe2093230/jetified-facebook-login-5.12.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d74252d2c27c55179b6cb3fb4f665db1/jetified-facebook-login-5.12.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d74252d2c27c55179b6cb3fb4f665db1/jetified-facebook-login-5.12.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d74252d2c27c55179b6cb3fb4f665db1/jetified-facebook-login-5.12.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.android/facebook-login/5.12.1/d8ea4f8f3dae6e1695b7b4e8d5b65a5a2ac84bbf/facebook-login-5.12.1-javadoc.jar!/" />

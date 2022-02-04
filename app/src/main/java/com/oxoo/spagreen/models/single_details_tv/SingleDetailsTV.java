@@ -4,15 +4,49 @@ package com.oxoo.spagreen.models.single_details_tv;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.oxoo.spagreen.models.home_content.Slider;
 
 public class SingleDetailsTV {
 
     @SerializedName("live_tv_id")
     @Expose
     private String liveTvId;
+
+    @SerializedName("slider_details")
+    @Expose
+    private Slider slider_details;
+
+
+
     @SerializedName("tv_name")
     @Expose
     private String tvName;
+
+    @SerializedName("expire_date")
+    @Expose
+    private String expire_date;
+
+    @SerializedName("is_free_user")
+    @Expose
+    private boolean is_free_user;
+
+
+    public String getExpire_date() {
+        return expire_date;
+    }
+
+    public void setExpire_date(String expire_date) {
+        this.expire_date = expire_date;
+    }
+
+    public boolean isIs_free_user() {
+        return is_free_user;
+    }
+
+    public void setIs_free_user(boolean is_free_user) {
+        this.is_free_user = is_free_user;
+    }
+
     @SerializedName("is_paid")
     @Expose
     private String isPaid;
@@ -171,6 +205,13 @@ public class SingleDetailsTV {
 
     public void setProgramGuide(List<ProgramGuide> programGuide) {
         this.programGuide = programGuide;
+    }
+
+    public Slider getSlider_details() {
+        return slider_details;
+    }
+    public void setSlider_details(Slider slider_details) {
+        this.slider_details = slider_details;
     }
 
 }

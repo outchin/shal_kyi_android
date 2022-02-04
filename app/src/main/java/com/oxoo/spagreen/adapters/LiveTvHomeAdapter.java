@@ -97,6 +97,7 @@ public class LiveTvHomeAdapter extends RecyclerView.Adapter<LiveTvHomeAdapter.Or
     }
 
     private void playContent(CommonModels obj){
+        System.out.print("play content is called");
         Intent intent = new Intent(ctx, DetailsActivity.class);
         intent.putExtra("vType",obj.getVideoType());
         intent.putExtra("id",obj.getId());

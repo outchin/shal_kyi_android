@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d9a59a10f2ffbe9311681b425dd93c4d/jetified-RubberPicker-v1.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d9a59a10f2ffbe9311681b425dd93c4d/jetified-RubberPicker-v1.1/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d9a59a10f2ffbe9311681b425dd93c4d/jetified-RubberPicker-v1.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/622b0b32be5b67ccbe4b43351dae78bd/jetified-RubberPicker-v1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/622b0b32be5b67ccbe4b43351dae78bd/jetified-RubberPicker-v1.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/622b0b32be5b67ccbe4b43351dae78bd/jetified-RubberPicker-v1.1/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

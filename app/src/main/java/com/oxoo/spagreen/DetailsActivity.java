@@ -2,6 +2,7 @@ package com.oxoo.spagreen;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.mediarouter.app.MediaRouteButton;
@@ -36,6 +38,7 @@ import retrofit2.Retrofit;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
@@ -44,6 +47,7 @@ import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -149,7 +153,7 @@ import com.oxoo.spagreen.utils.ads.PopUpAds;
 import com.oxoo.spagreen.utils.ToastMsg;
 import com.oxoo.spagreen.utils.Tools;
 import com.squareup.picasso.Picasso;
-
+import com.google.firebase.analytics.FirebaseAnalytics;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -161,6 +165,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.google.android.gms.ads.AdActivity.CLASS_NAME;
 
+import static com.oxoo.spagreen.utils.MyAppClass.getContext;
 public class DetailsActivity extends AppCompatActivity implements CastPlayer.SessionAvailabilityListener, ProgramAdapter.OnProgramClickListener, EpisodeAdapter.OnTVSeriesEpisodeItemClickListener,
         RelatedTvAdapter.RelatedTvClickListener {
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -207,7 +212,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private ShimmerFrameLayout shimmerFrameLayout;
     private Button btnComment;
     private EditText etComment;
-    private CommentsAdapter commentsAdapter;
+//    private CommentsAdapter commentsAdapter;
     private RelativeLayout adView;
     private InterstitialAd mInterstitialAd;
     private LinearLayout download_text;
@@ -298,6 +303,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     private DatabaseHelper db;
 
+    private String android_id = Settings.Secure.getString(getContext().getContentResolver(),
+            Settings.Secure.ANDROID_ID);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -315,8 +323,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         mAudioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
-        //---analytics-----------
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        //---analytics--    ---------
+       mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "details_activity");
@@ -458,19 +466,19 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         castSession = getIntent().getBooleanExtra("castSession", false);
 
         // getting user login info for favourite button visibility
-         userId = db.getUserData().getUserId();
+        userId = db.getUserData().getUserId();
         if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
             imgAddFav.setVisibility(VISIBLE);
         } else {
             imgAddFav.setVisibility(GONE);
         }
 
-        commentsAdapter = new CommentsAdapter(this, listComment);
-        rvComment.setLayoutManager(new LinearLayoutManager(this));
-        rvComment.setHasFixedSize(true);
-        rvComment.setNestedScrollingEnabled(false);
-        rvComment.setAdapter(commentsAdapter);
-        getComments();
+//        commentsAdapter = new CommentsAdapter(this, listComment);
+//        rvComment.setLayoutManager(new LinearLayoutManager(this));
+//        rvComment.setHasFixedSize(true);
+//        rvComment.setNestedScrollingEnabled(false);
+//        rvComment.setAdapter(commentsAdapter);
+//        getComments();
         imgFull.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -693,8 +701,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     if (PreferenceUtils.isLoggedIn(DetailsActivity.this) && PreferenceUtils.isActivePlan(DetailsActivity.this)) {
                         openDownloadServerDialog();
                     } else {
-                        Toast.makeText(DetailsActivity.this, R.string.download_not_permitted, Toast.LENGTH_SHORT).show();
-                        Log.e("Download", "not permitted");
+                        openDownloadServerDialog();
+
+                        //fix by zws
+                        //the following are fix by zws
+//                        Toast.makeText(DetailsActivity.this, R.string.download_not_permitted, Toast.LENGTH_SHORT).show();
+//                        Log.e("Download", "not permitted");
                     }
                 } else {
 
@@ -1207,6 +1219,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void initGetData() {
         if (!type.equals("tv")) {
 
+
             //----related rv----------
             relatedAdapter = new HomePageAdapter(this, listRelated);
             rvRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,
@@ -1311,12 +1324,26 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             rvRelated.setAdapter(relatedTvAdapter);
             relatedTvAdapter.setListener(DetailsActivity.this);
 
+            //zws ------------------------------------------------------------------------------
+            rvRelated.setVisibility(GONE); //zws
+            tvRelated.setVisibility(GONE); //zws
+
+
+            //zws ------------------------------------------------------------------------------
+
+
+
+
             imgAddFav.setVisibility(GONE);
 
             serverAdapter = new ServerAdapter(this, listServer, "tv");
             rvServer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             rvServer.setHasFixedSize(true);
             rvServer.setAdapter(serverAdapter);
+
+
+
+
             getTvData(type, id);
             llBottom.setVisibility(GONE);
 
@@ -1416,7 +1443,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         DefaultTrackSelector trackSelector = new
                 DefaultTrackSelector(videoTrackSelectionFactory);
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-       // player.setPlayWhenReady(true);
+        // player.setPlayWhenReady(true);
         //simpleExoPlayerView.setPlayer(player);
 
         Uri uri = Uri.parse(url);
@@ -1637,13 +1664,25 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     private void getTvData(final String vtype, final String vId) {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+        String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
+
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsTVApi api = retrofit.create(SingleDetailsTVApi.class);
-        Call<SingleDetailsTV> call = api.getSingleDetails(Config.API_KEY, vtype, vId);
+        Call<SingleDetailsTV> call = api.getSingleDetails(Config.API_KEY, vtype, vId,android_id,userCode);
         call.enqueue(new Callback<SingleDetailsTV>() {
             @Override
             public void onResponse(Call<SingleDetailsTV> call, retrofit2.Response<SingleDetailsTV> response) {
                 if (response.code() == 200){
+
+
+
+                    SharedPreferences.Editor editor1 = getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE).edit();
+                    editor1.putString(Constants.REG_END_DATE, response.body().getExpire_date());
+                    editor1.apply();
+                    editor1.commit();
+
+
                     if (response.body() != null){
                         swipeRefreshLayout.setRefreshing(false);
                         shimmerFrameLayout.stopShimmer();
@@ -1665,6 +1704,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                 .into(tvThumbIv);
 
                         CommonModels model = new CommonModels();
+
                         model.setTitle("HD");
                         model.setStremURL(V_URL);
                         model.setServerType(detailsModel.getStreamFrom());
@@ -1728,6 +1768,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                         serverAdapter.notifyDataSetChanged();
                     }
+                }else if(response.code() == 201) {
+                    showExpireDialog();
+                }else if(response.code() == 203)
+                {
+                    showUserCodeErrorDialog();
+                }else
+                {
+                    showGeneralErrorDialog(response.code()+"" + response.body()+"");
                 }
             }
 
@@ -1740,10 +1788,15 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     private void getSeriesData(String vtype, String vId) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+        String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
+
+        //Toast.makeText(getApplicationContext(),"ccccccc1",Toast.LENGTH_SHORT).show();
         final List<String> seasonList = new ArrayList<>();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
-        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId);
+        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId,android_id,userCode);
         call.enqueue(new Callback<SingleDetails>() {
             @Override
             public void onResponse(Call<SingleDetails> call, retrofit2.Response<SingleDetails> response) {
@@ -1761,7 +1814,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     castImageUrl = singleDetails.getThumbnailUrl();
                     seriesTitle = title;
                     tvName.setText(title);
-                    tvRelease.setText("Release On " + singleDetails.getRelease());
+
+
                     tvDes.setText(singleDetails.getDescription());
 
                     Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
@@ -1903,18 +1957,36 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     }
 
-    private void getData(String vtype, String vId) {
+    private void getData(String vtype, String vId) { //for highlights
         strCast = "";
         strDirector = "";
         strGenre = "";
 
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+        String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
+
+
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
-        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId);
+        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId,android_id,userCode);
+        System.out.println("vType is " + vtype);
+        System.out.println("vId is " + vId);
+        System.out.println("android_id is " + android_id);
+        System.out.println("userCode is " + userCode);
         call.enqueue(new Callback<SingleDetails>() {
             @Override
             public void onResponse(Call<SingleDetails> call, retrofit2.Response<SingleDetails> response) {
+
+                System.out.print("response " + response);
                 if (response.code() == 200){
+
+
+
+                    SharedPreferences.Editor editor1 = getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE).edit();
+                    editor1.putString(Constants.REG_END_DATE, response.body().getExpire_date());
+                    editor1.apply();
+                    editor1.commit();
+
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(GONE);
                     swipeRefreshLayout.setRefreshing(false);
@@ -1927,7 +1999,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     castImageUrl = singleDetails.getThumbnailUrl();
                     if (download_check.equals("1")) {
                         download_text.setVisibility(VISIBLE);
-                        downloadBt.setVisibility(VISIBLE);
+
+                        downloadBt.setVisibility(GONE);
+
+                        //This is visible default and fix to gone by zws
+                        //  downloadBt.setVisibility(VISIBLE);
                     } else {
                         download_text.setVisibility(GONE);
                         downloadBt.setVisibility(GONE);
@@ -1935,15 +2011,24 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     title = singleDetails.getTitle();
                     movieTitle = title;
 
+
+
                     tvName.setText(title);
-                    tvRelease.setText("Release On " + singleDetails.getRelease());
+                    //  tvRelease.setText("Release On  " + singleDetails.getRelease()); //fix by zws
                     tvDes.setText(singleDetails.getDescription());
 
 
-                    Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
-                            .into(posterIv);
-                    Picasso.get().load(singleDetails.getThumbnailUrl()).placeholder(R.drawable.poster_placeholder)
-                            .into(thumbIv);
+                    try{
+                        Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
+                                .into(posterIv);
+                        Picasso.get().load(singleDetails.getThumbnailUrl()).placeholder(R.drawable.poster_placeholder)
+                                .into(thumbIv);
+                    }catch (Exception e){
+                        Picasso.get().load(R.drawable.shalkyi_thumbnail).placeholder(R.drawable.album_art_placeholder_large)
+                                .into(posterIv);
+                        Picasso.get().load(R.drawable.shalkyi_thumbnail).placeholder(R.drawable.poster_placeholder)
+                                .into(thumbIv);
+                    }
 
                     //----director---------------
                     for (int i = 0; i < singleDetails.getDirector().size(); i++) {
@@ -2066,8 +2151,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
 
-                }else {
-                    swipeRefreshLayout.setRefreshing(false);
+                }else if(response.code() == 201) {
+                    showExpireDialog();
+                }else if(response.code() == 203)
+                {
+                    showUserCodeErrorDialog();
+                }else
+                {
+                    showGeneralErrorDialog(response+"");
                 }
             }
 
@@ -2151,7 +2242,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 if (response.body().getStatus().equals("success")){
                     rvComment.removeAllViews();
                     listComment.clear();
-                    getComments();
+//                    getComments();
                     etComment.setText("");
                     new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
                 }else {
@@ -2166,28 +2257,28 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         });
     }
 
-    private void getComments() {
-
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
-        CommentApi api = retrofit.create(CommentApi.class);
-        Call<List<GetCommentsModel>> call = api.getAllComments(Config.API_KEY, id);
-        call.enqueue(new Callback<List<GetCommentsModel>>() {
-            @Override
-            public void onResponse(Call<List<GetCommentsModel>> call, retrofit2.Response<List<GetCommentsModel>> response) {
-                if (response.code() == 200) {
-                    listComment.addAll(response.body());
-
-                    commentsAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<GetCommentsModel>> call, Throwable t) {
-
-            }
-        });
-
-    }
+//    private void getComments() {
+//
+//        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+//        CommentApi api = retrofit.create(CommentApi.class);
+//        Call<List<GetCommentsModel>> call = api.getAllComments(Config.API_KEY, id);
+//        call.enqueue(new Callback<List<GetCommentsModel>>() {
+//            @Override
+//            public void onResponse(Call<List<GetCommentsModel>> call, retrofit2.Response<List<GetCommentsModel>> response) {
+//                if (response.code() == 200) {
+//                    listComment.addAll(response.body());
+//
+//                    commentsAdapter.notifyDataSetChanged();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<GetCommentsModel>> call, Throwable t) {
+//
+//            }
+//        });
+//
+//    }
 
     public void hideDescriptionLayout() {
         descriptionLayout.setVisibility(GONE);
@@ -2416,10 +2507,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -2580,6 +2670,121 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
+    }
+    private void showExpireDialog()
+    {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_info);
+
+        TextView mm_text= dialog.findViewById(R.id.mm_text);
+        TextView eng_text= dialog.findViewById(R.id.eng_text);
+
+        mm_text.setText("ကြည့်ရှုခွင့် သက်တမ်း ကုန်ဆုံးသွားပါပြီ။");
+        eng_text.setText("Sorry, your account is expired!");
+
+
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this, DetailsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
+    private void showGeneralErrorDialog(String code)
+    {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_info);
+
+        TextView mm_text= dialog.findViewById(R.id.mm_text);
+        TextView eng_text= dialog.findViewById(R.id.eng_text);
+
+        mm_text.setText("တစ်စုံတစ်ခု မှားယွင်းနေပါသည်");
+        eng_text.setText("Sorry, something went wrong! " + code );
+
+
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this, DetailsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
+
+    private void showUserCodeErrorDialog()
+    {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_info);
+
+        TextView mm_text= dialog.findViewById(R.id.mm_text);
+        TextView eng_text= dialog.findViewById(R.id.eng_text);
+
+        mm_text.setText("Code မှားယွင်းနေပါသည်။");
+        eng_text.setText("Sorry, your code is invalid!");
+
+
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this, DetailsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
     }
 }
 

@@ -10,9 +10,27 @@ public class SingleDetails {
     @SerializedName("videos_id")
     @Expose
     private String videosId;
+
+    public String getExpire_date() {
+        return expire_date;
+    }
+
+    public void setExpire_date(String expire_date) {
+        this.expire_date = expire_date;
+    }
+
     @SerializedName("title")
     @Expose
     private String title;
+
+    @SerializedName("expire_date")
+    @Expose
+    private String expire_date;
+
+    @SerializedName("is_free_user")
+    @Expose
+    private boolean is_free_user;
+
     @SerializedName("description")
     @Expose
     private String description;
@@ -99,6 +117,14 @@ public class SingleDetails {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isIs_free_user() {
+        return is_free_user;
+    }
+
+    public void setIs_free_user(boolean is_free_user) {
+        this.is_free_user = is_free_user;
     }
 
     public String getSlug() {

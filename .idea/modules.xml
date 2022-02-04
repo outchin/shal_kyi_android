@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ShalKyi_Live_TV.iml" filepath="$PROJECT_DIR$/.idea/modules/ShalKyi_Live_TV.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ShalKyi_Live_TV.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ShalKyi_Live_TV.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shal_kyi_android.iml" filepath="$PROJECT_DIR$/.idea/modules/shal_kyi_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/shal_kyi_android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/shal_kyi_android.app.iml" />
     </modules>
   </component>
 </project>

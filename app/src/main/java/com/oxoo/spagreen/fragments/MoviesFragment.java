@@ -274,8 +274,10 @@ public class MoviesFragment extends Fragment {
                         models.setReleaseDate(video.getRelease());
                         if (video.getIsTvseries().equals("1") ) {
                             models.setVideoType("tvseries");
-                        } else {
+                        } else if(video.getIsHighlights().equals("1")) {
                             models.setVideoType("movie");
+                        }else {
+                            models.setVideoType("movie_1");
                         }
 
 

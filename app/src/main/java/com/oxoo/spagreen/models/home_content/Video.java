@@ -21,9 +21,23 @@ public class Video {
     @SerializedName("release")
     @Expose
     private String release;
+
     @SerializedName("is_tvseries")
     @Expose
     private String isTvseries;
+
+    public String getIsHighlights() {
+        return isHighlights;
+    }
+
+    public void setIsHighlights(String isHighlights) {
+        this.isHighlights = isHighlights;
+    }
+
+    @SerializedName("is_highlights")
+    @Expose
+    private String isHighlights;
+
     @SerializedName("is_paid")
     @Expose
     private String isPaid;
