@@ -66,7 +66,8 @@ public class HighlightsFragment extends Fragment {
     private LinearLayout searchRootLayout;
 
     private CardView searchBar;
-    private ImageView menuIv, searchIv;
+    //private ImageView menuIv, searchIv;
+    private ImageView menuIv;
     private TextView pageTitle;
 
     private static final int HIDE_THRESHOLD = 20;
@@ -90,13 +91,13 @@ public class HighlightsFragment extends Fragment {
 
         initComponent(view);
 
-        pageTitle.setText(getResources().getString(R.string.movie));
+        pageTitle.setText(getResources().getString(R.string.highlights));
 
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
             menuIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_menu));
-            searchIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_search_white));
+//            searchIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_search_white));
         }
 
     }
@@ -118,7 +119,7 @@ public class HighlightsFragment extends Fragment {
         searchBar = view.findViewById(R.id.search_bar);
         menuIv = view.findViewById(R.id.bt_menu);
         pageTitle = view.findViewById(R.id.page_title_tv);
-        searchIv = view.findViewById(R.id.search_iv);
+       // searchIv = view.findViewById(R.id.search_iv);
         //scrollView = view.findViewById(R.id.scrollView);
 
         //----movie's recycler view-----------------
@@ -227,12 +228,12 @@ public class HighlightsFragment extends Fragment {
                 activity.openDrawer();
             }
         });
-        searchIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.goToSearchActivity();
-            }
-        });
+//        searchIv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                activity.goToSearchActivity();
+//            }
+//        });
 
     }
 

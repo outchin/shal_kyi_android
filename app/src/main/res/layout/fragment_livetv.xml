@@ -624,7 +624,7 @@
 
                 <include
                     android:id="@+id/search_bar"
-                    layout="@layout/toolbar" />
+                    layout="@layout/toolbar_no_search" />
 
             </LinearLayout>
 
