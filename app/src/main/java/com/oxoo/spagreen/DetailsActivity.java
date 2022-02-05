@@ -1861,7 +1861,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                             }
                         }
                     }
-                    setGenreText();
+                    //setGenreText();
 
                     //----related tv series---------------
                     for (int i = 0; i < singleDetails.getRelatedTvseries().size(); i++) {
@@ -1871,7 +1871,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         models.setTitle(relatedTvSeries.getTitle());
                         models.setImageUrl(relatedTvSeries.getThumbnailUrl());
                         models.setId(relatedTvSeries.getVideosId());
-                        models.setVideoType("tvseries");
+                        models.setVideoType("movie_1");
                         models.setIsPaid(relatedTvSeries.getIsPaid());
                         listRelated.add(models);
                     }
