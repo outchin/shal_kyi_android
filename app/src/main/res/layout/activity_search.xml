@@ -76,6 +76,7 @@
                     android:textAllCaps="false" />
 
                 <Button
+                    android:visibility="gone"
                     android:id="@+id/btn_flex_3"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"

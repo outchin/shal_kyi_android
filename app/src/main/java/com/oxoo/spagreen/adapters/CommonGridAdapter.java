@@ -98,7 +98,8 @@ public class CommonGridAdapter extends RecyclerView.Adapter<CommonGridAdapter.Or
 
 
     private void goToDetailsActivity(CommonModels obj) {
-        Intent intent=new Intent(ctx, DetailsActivityHighlights.class);
+//        Intent intent=new Intent(ctx, DetailsActivityHighlights.class);
+        Intent intent=new Intent(ctx, DetailsActivity.class);
         intent.putExtra("vType",obj.getVideoType());
         intent.putExtra("id",obj.getId());
         ctx.startActivity(intent);

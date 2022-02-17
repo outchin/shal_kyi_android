@@ -24,6 +24,7 @@ import com.oxoo.spagreen.database.DatabaseHelper;
 import com.oxoo.spagreen.models.CommonModels;
 import com.oxoo.spagreen.models.home_content.Video;
 import com.oxoo.spagreen.network.RetrofitClient;
+import com.oxoo.spagreen.network.RetrofitClientDO;
 import com.oxoo.spagreen.network.apis.MovieApi;
 import com.oxoo.spagreen.network.model.AdsConfig;
 import com.oxoo.spagreen.utils.ads.BannerAds;
@@ -80,12 +81,12 @@ public class ItemMovieActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //---analytics-----------
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "movie_activity");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "activity");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+//        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 
         getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
@@ -179,8 +180,9 @@ public class ItemMovieActivity extends AppCompatActivity {
     }
 
     private void getMovieByGenreId(String id, int pageNum) {
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
+
         Call<List<Video>> call = api.getMovieByGenreId(Config.API_KEY, id, pageNum);
         call.enqueue(new Callback<List<Video>>() {
             @Override
@@ -208,7 +210,7 @@ public class ItemMovieActivity extends AppCompatActivity {
                         if (video.getIsTvseries().equals("1") ) {
                             models.setVideoType("tvseries");
                         } else {
-                            models.setVideoType("movie");
+                            models.setVideoType("movie_1");
                         }
 
 
@@ -244,7 +246,7 @@ public class ItemMovieActivity extends AppCompatActivity {
     }
 
     private void getMovieByCountryId(String id, int pageNum) {
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
         Call<List<Video>> call = api.getMovieByCountryId(Config.API_KEY, id, pageNum);
         call.enqueue(new Callback<List<Video>>() {
@@ -273,7 +275,8 @@ public class ItemMovieActivity extends AppCompatActivity {
                         if (video.getIsTvseries().equals("1") ) {
                             models.setVideoType("tvseries");
                         } else {
-                            models.setVideoType("movie");
+                            //models.setVideoType("movie");
+                            models.setVideoType("movie_1");
                         }
 
 
@@ -355,7 +358,7 @@ public class ItemMovieActivity extends AppCompatActivity {
                         if (video.getIsTvseries().equals("1") ) {
                             models.setVideoType("tvseries");
                         } else {
-                            models.setVideoType("movie");
+                            models.setVideoType("movie_1");
                         }
 
 

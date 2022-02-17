@@ -59,7 +59,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             holder.qualityTv.setText(commonModel.getVideoQuality());
             holder.releaseDateTv.setText(commonModel.getRelease());
 
-            Picasso.get().load(commonModel.getThumbnailUrl()).into(holder.image);
+            try{
+                Picasso.get().load(commonModel.getThumbnailUrl()).into(holder.image);
+            }catch(Exception e){
+                Picasso.get().load(R.drawable.shalkyi_thumbnail).into(holder.image);
+            }
 
 
         }

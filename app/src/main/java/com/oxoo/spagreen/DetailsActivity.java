@@ -33,6 +33,7 @@ import at.huber.youtubeExtractor.YouTubeExtractor;
 import at.huber.youtubeExtractor.YtFile;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import android.os.Environment;
@@ -137,14 +138,17 @@ import com.oxoo.spagreen.models.single_details_tv.AllTvChannel;
 import com.oxoo.spagreen.models.single_details_tv.ProgramGuide;
 import com.oxoo.spagreen.models.single_details_tv.SingleDetailsTV;
 import com.oxoo.spagreen.network.RetrofitClient;
+import com.oxoo.spagreen.network.RetrofitClientDO;
 import com.oxoo.spagreen.network.apis.CommentApi;
 import com.oxoo.spagreen.network.apis.FavouriteApi;
+import com.oxoo.spagreen.network.apis.SignUpApi;
 import com.oxoo.spagreen.network.apis.SingleDetailsApi;
 import com.oxoo.spagreen.network.apis.SingleDetailsTVApi;
 import com.oxoo.spagreen.network.apis.SubscriptionApi;
 import com.oxoo.spagreen.network.model.ActiveStatus;
 import com.oxoo.spagreen.network.model.AdsConfig;
 import com.oxoo.spagreen.network.model.FavoriteModel;
+import com.oxoo.spagreen.network.model.User;
 import com.oxoo.spagreen.service.DownloadWorkManager;
 import com.oxoo.spagreen.utils.PreferenceUtils;
 import com.oxoo.spagreen.utils.ads.BannerAds;
@@ -154,6 +158,7 @@ import com.oxoo.spagreen.utils.ToastMsg;
 import com.oxoo.spagreen.utils.Tools;
 import com.squareup.picasso.Picasso;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -166,6 +171,7 @@ import static android.view.View.VISIBLE;
 import static com.google.android.gms.ads.AdActivity.CLASS_NAME;
 
 import static com.oxoo.spagreen.utils.MyAppClass.getContext;
+
 public class DetailsActivity extends AppCompatActivity implements CastPlayer.SessionAvailabilityListener, ProgramAdapter.OnProgramClickListener, EpisodeAdapter.OnTVSeriesEpisodeItemClickListener,
         RelatedTvAdapter.RelatedTvClickListener {
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -212,7 +218,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private ShimmerFrameLayout shimmerFrameLayout;
     private Button btnComment;
     private EditText etComment;
-//    private CommentsAdapter commentsAdapter;
+    //    private CommentsAdapter commentsAdapter;
     private RelativeLayout adView;
     private InterstitialAd mInterstitialAd;
     private LinearLayout download_text;
@@ -324,12 +330,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         mAudioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
         //---analytics--    ---------
-       mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+//       mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "details_activity");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "activity");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+//        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         adView = findViewById(R.id.adView);
         llBottom = findViewById(R.id.llbottom);
@@ -447,7 +453,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             public void onClick(View v) {
                 if (activeMovie) {
                     setPlayerNormalScreen();
-                    if (player != null){
+                    if (player != null) {
                         player.setPlayWhenReady(false);
                         player.stop();
                     }
@@ -466,11 +472,15 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         castSession = getIntent().getBooleanExtra("castSession", false);
 
         // getting user login info for favourite button visibility
-        userId = db.getUserData().getUserId();
+        SharedPreferences sharedPreferences1 = getSharedPreferences(Constants.USER_ID, MODE_PRIVATE);
+        userId = sharedPreferences1.getString(Constants.USER_ID, null);
+
+//        userId = db.getUserData().getUserId();
         if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
             imgAddFav.setVisibility(VISIBLE);
         } else {
-            imgAddFav.setVisibility(GONE);
+//            imgAddFav.setVisibility(GONE);
+            imgAddFav.setVisibility(VISIBLE);
         }
 
 //        commentsAdapter = new CommentsAdapter(this, listComment);
@@ -503,7 +513,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     new ToastMsg(DetailsActivity.this).toastIconError(getString(R.string.comment_empty));
                 } else {
                     String comment = etComment.getText().toString();
-                    addComment( id, PreferenceUtils.getUserId(DetailsActivity.this), comment);
+                    addComment(id, PreferenceUtils.getUserId(DetailsActivity.this), comment);
                 }
             }
         });
@@ -511,11 +521,66 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         imgAddFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFav) {
-                    removeFromFav();
+                SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+                SharedPreferences sharedPreferences1 = getSharedPreferences(Constants.IS_SIGN_UP, MODE_PRIVATE);
+                String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
+                Boolean isSignUp = sharedPreferences1.getBoolean(Constants.IS_SIGN_UP, false);
+
+                if (!userCode.equals(""))  //user code valid
+                {
+                    if (!isSignUp) //user is not sign up -> need to sign up
+                    {
+                        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
+                        SignUpApi signUpApi = retrofit.create(SignUpApi.class);
+                        Call<User> call = signUpApi.signUp(Config.API_KEY, android_id);
+                        call.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                User user = response.body();
+
+                                if (user.getStatus().equals("success")) {
+                                    new ToastMsg(DetailsActivity.this).toastIconSuccess("Successfully registered");
+                                    SharedPreferences.Editor editor = getSharedPreferences(Constants.IS_SIGN_UP, MODE_PRIVATE).edit();
+                                    SharedPreferences.Editor editor1 = getSharedPreferences(Constants.USER_ID, MODE_PRIVATE).edit();
+                                    editor.putBoolean(Constants.IS_SIGN_UP, true);
+                                    editor.apply();
+                                    editor.commit();
+
+                                    editor1.putString(Constants.USER_ID, user.getUserId());
+                                    editor1.apply();
+                                    editor1.commit();
+
+                                    addToFav();
+
+                                } else if (user.getStatus().equals("error")){
+                                    new ToastMsg(DetailsActivity.this).toastIconError(user.getData());
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+                                new ToastMsg(DetailsActivity.this).toastIconError("Something went wrong."+ t.getMessage());
+                                t.printStackTrace();
+
+                            }
+                        });
+
+
+                    } else {   //user is already signup
+
+                        if (isFav) {
+                            removeFromFav();
+                        } else {
+                            addToFav();
+                        }
+                    }
+
                 } else {
-                    addToFav();
+                    Toast.makeText(getApplicationContext(), "you need to subscribed", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
 
@@ -592,7 +657,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     protected void onStart() {
         super.onStart();
 
-        if (!Config.ENABLE_EXTERNAL_PLAYER){
+        if (!Config.ENABLE_EXTERNAL_PLAYER) {
             externalPlayerIv.setVisibility(GONE);
         }
 
@@ -685,10 +750,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         preparePlayer(listServer.get(0));
                         descriptionLayout.setVisibility(GONE);
                         lPlay.setVisibility(VISIBLE);
-                    }else {
+                    } else {
                         openServerDialog();
                     }
-                }else{
+                } else {
                     Toast.makeText(DetailsActivity.this, R.string.no_video_found, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -850,11 +915,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //close embed link playing
-        if (webView.getVisibility() == VISIBLE){
-            if (webView != null){
+        if (webView.getVisibility() == VISIBLE) {
+            if (webView != null) {
                 Intent intent = new Intent(DetailsActivity.this, DetailsActivity.class);
-                intent.putExtra("vType",type);
-                intent.putExtra("id",id);
+                intent.putExtra("vType", type);
+                intent.putExtra("id", id);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -961,7 +1026,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     }
 
-    public void preparePlayer(CommonModels obj){
+    public void preparePlayer(CommonModels obj) {
         activeMovie = true;
         setPlayerFullScreen();
         mediaUrl = obj.getStremURL();
@@ -975,7 +1040,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
             if (listSub.size() != 0) {
                 imgSubtitle.setVisibility(VISIBLE);
-            }else {
+            } else {
                 imgSubtitle.setVisibility(GONE);
             }
 
@@ -1013,7 +1078,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         castCrews.clear();
     }
 
-    private void prepareSubtitleList(Context context, List<SubtitleModel> list){
+    private void prepareSubtitleList(Context context, List<SubtitleModel> list) {
 
     }
 
@@ -1121,7 +1186,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     //if it is embed player will go full screen
     @Override
     public void onEpisodeItemClickTvSeries(String type, View view, EpiModel obj, int position, EpisodeAdapter.OriginalViewHolder holder) {
-        if (type.equalsIgnoreCase("embed")){
+        if (type.equalsIgnoreCase("embed")) {
             CommonModels model = new CommonModels();
             model.setStremURL(obj.getStreamURL());
             model.setServerType(obj.getServerType());
@@ -1129,13 +1194,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             releasePlayer();
             resetCastPlayer();
             preparePlayer(model);
-        }else {
-            if (obj != null){
-                if (obj.getSubtitleList().size() != 0){
+        } else {
+            if (obj != null) {
+                if (obj.getSubtitleList().size() != 0) {
                     listSub.clear();
                     listSub.addAll(obj.getSubtitleList());
                     imgSubtitle.setVisibility(VISIBLE);
-                }else {
+                } else {
                     listSub.clear();
                     imgSubtitle.setVisibility(GONE);
                 }
@@ -1332,16 +1397,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             //zws ------------------------------------------------------------------------------
 
 
-
-
-            imgAddFav.setVisibility(GONE);
+//            imgAddFav.setVisibility(GONE);
+            imgAddFav.setVisibility(VISIBLE);
 
             serverAdapter = new ServerAdapter(this, listServer, "tv");
             rvServer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             rvServer.setHasFixedSize(true);
             rvServer.setAdapter(serverAdapter);
-
-
 
 
             getTvData(type, id);
@@ -1428,7 +1490,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     public void initVideoPlayer(String url, Context context, String type) {
         progressBar.setVisibility(VISIBLE);
 
-        if (player != null){
+        if (player != null) {
             player.stop();
             player.release();
         }
@@ -1574,21 +1636,25 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     private void addToFav() {
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_ID, MODE_PRIVATE);
+        String userId = sharedPreferences.getString(Constants.USER_ID, null);
+
         Call<FavoriteModel> call = api.addToFavorite(Config.API_KEY, userId, id);
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(Call<FavoriteModel> call, retrofit2.Response<FavoriteModel> response) {
-                if (response.code() == 200){
-                    if (response.body().getStatus().equalsIgnoreCase("success")){
+                if (response.code() == 200) {
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
                         new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
                         isFav = true;
                         imgAddFav.setBackgroundResource(R.drawable.ic_favorite_white);
                     } else {
                         new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
                     }
-                }else {
+                } else {
                     new ToastMsg(DetailsActivity.this).toastIconError(getString(R.string.error_toast));
                 }
             }
@@ -1604,29 +1670,41 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     private void paidControl(String isPaid) {
         if (isPaid.equals("1")) {
-            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-                    if (PreferenceUtils.isValid(DetailsActivity.this)) {
-                        contentDetails.setVisibility(VISIBLE);
-                        subscriptionLayout.setVisibility(GONE);
-                        Log.e("SUBCHECK", "validity: " + PreferenceUtils.isValid(DetailsActivity.this));
 
-                    } else {
-                        Log.e("SUBCHECK", "not valid");
-                        /*contentDetails.setVisibility(GONE);
-                        subscriptionLayout.setVisibility(VISIBLE);*/
-                        PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-                        //paidControl(isPaid);
-                    }
-                } else {
-                    Log.e("SUBCHECK", "not active plan");
-                    contentDetails.setVisibility(GONE);
-                    subscriptionLayout.setVisibility(VISIBLE);
-                }
-            }else {
+
+            SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+            String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
+            if(!userCode.equals("")) //user has code
+            {
+
+            }else{ //user has no code
                 startActivity(new Intent(DetailsActivity.this, FirebaseSignUpActivity.class));
                 finish();
             }
+
+//            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+//                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
+//                    if (PreferenceUtils.isValid(DetailsActivity.this)) {
+//                        contentDetails.setVisibility(VISIBLE);
+//                        subscriptionLayout.setVisibility(GONE);
+//                        Log.e("SUBCHECK", "validity: " + PreferenceUtils.isValid(DetailsActivity.this));
+//
+//                    } else {
+//                        Log.e("SUBCHECK", "not valid");
+//                        /*contentDetails.setVisibility(GONE);
+//                        subscriptionLayout.setVisibility(VISIBLE);*/
+//                        PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
+//                        //paidControl(isPaid);
+//                    }
+//                } else {
+//                    Log.e("SUBCHECK", "not active plan");
+//                    contentDetails.setVisibility(GONE);
+//                    subscriptionLayout.setVisibility(VISIBLE);
+//                }
+//            } else {
+//                startActivity(new Intent(DetailsActivity.this, FirebaseSignUpActivity.class));
+//                finish();
+//            }
 
         } else {
             //free content
@@ -1669,12 +1747,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsTVApi api = retrofit.create(SingleDetailsTVApi.class);
-        Call<SingleDetailsTV> call = api.getSingleDetails(Config.API_KEY, vtype, vId,android_id,userCode);
+        Call<SingleDetailsTV> call = api.getSingleDetails(Config.API_KEY, vtype, vId, android_id, userCode);
         call.enqueue(new Callback<SingleDetailsTV>() {
             @Override
             public void onResponse(Call<SingleDetailsTV> call, retrofit2.Response<SingleDetailsTV> response) {
-                if (response.code() == 200){
-
+                if (response.code() == 200) {
 
 
                     SharedPreferences.Editor editor1 = getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE).edit();
@@ -1683,7 +1760,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     editor1.commit();
 
 
-                    if (response.body() != null){
+                    if (response.body() != null) {
                         swipeRefreshLayout.setRefreshing(false);
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.setVisibility(GONE);
@@ -1768,14 +1845,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                         serverAdapter.notifyDataSetChanged();
                     }
-                }else if(response.code() == 201) {
+                } else if (response.code() == 201) {
                     showExpireDialog();
-                }else if(response.code() == 203)
-                {
+                } else if (response.code() == 203) {
                     showUserCodeErrorDialog();
-                }else
-                {
-                    showGeneralErrorDialog(response.code()+"" + response.body()+"");
+                } else {
+                    showGeneralErrorDialog(response.code() + "" + response.body() + "");
                 }
             }
 
@@ -1796,11 +1871,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         final List<String> seasonList = new ArrayList<>();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
-        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId,android_id,userCode);
+        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId, android_id, userCode);
+        System.out.println("API LINK " + "https://shalkyi.djduduchat.com/single_details?type=" + vtype + "id=" + vId + "device_id=" + android_id + "code=" + userCode);
         call.enqueue(new Callback<SingleDetails>() {
             @Override
             public void onResponse(Call<SingleDetails> call, retrofit2.Response<SingleDetails> response) {
-                if (response.code() == 200){
+                if (response.code() == 200) {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(GONE);
@@ -1862,7 +1938,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
                     //setGenreText();
-
+                    setGenreText();
                     //----related tv series---------------
                     for (int i = 0; i < singleDetails.getRelatedTvseries().size(); i++) {
                         RelatedMovie relatedTvSeries = singleDetails.getRelatedTvseries().get(i);
@@ -1871,7 +1947,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         models.setTitle(relatedTvSeries.getTitle());
                         models.setImageUrl(relatedTvSeries.getThumbnailUrl());
                         models.setId(relatedTvSeries.getVideosId());
-                        models.setVideoType("movie_1");
+                        models.setVideoType("tvseries");
                         models.setIsPaid(relatedTvSeries.getIsPaid());
                         listRelated.add(models);
                     }
@@ -1881,7 +1957,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     relatedAdapter.notifyDataSetChanged();
 
                     //----seasson------------
-                    for (int i = 0; i <singleDetails.getSeason().size(); i++) {
+                    for (int i = 0; i < singleDetails.getSeason().size(); i++) {
                         Season season = singleDetails.getSeason().get(i);
 
                         CommonModels models = new CommonModels();
@@ -1892,7 +1968,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         //----episode------
                         List<EpiModel> epList = new ArrayList<>();
                         epList.clear();
-                        for (int j = 0; j <singleDetails.getSeason().get(i).getEpisodes().size(); j++) {
+                        for (int j = 0; j < singleDetails.getSeason().get(i).getEpisodes().size(); j++) {
                             Episode episode = singleDetails.getSeason().get(i).getEpisodes().get(j);
 
                             EpiModel model = new EpiModel();
@@ -1966,26 +2042,33 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
 
 
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
-        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId,android_id,userCode);
+        Call<SingleDetails> call = api.getSingleDetails(Config.API_KEY, vtype, vId, android_id, userCode);
+        System.out.println(call.toString());
         System.out.println("vType is " + vtype);
         System.out.println("vId is " + vId);
         System.out.println("android_id is " + android_id);
         System.out.println("userCode is " + userCode);
+        System.out.println(Config.API_SERVER_URL);
+        System.out.println(Config.API_KEY);
+
+        System.out.println("API LINK ss " + "https://shalkyi.djduduchat.com/single_details?type=" + vtype + "&id=" + vId + "&device_id=" + android_id + "&code=" + userCode);
+        Log.d(TAG, "onResponse: ConfigurationListener::" + call.request().url());
         call.enqueue(new Callback<SingleDetails>() {
             @Override
             public void onResponse(Call<SingleDetails> call, retrofit2.Response<SingleDetails> response) {
 
-                System.out.print("response " + response);
-                if (response.code() == 200){
+                System.out.print("response " + response.code() + " ");
+
+                if (response.code() == 200) {
 
 
-
+                    Log.d(TAG, "onResponseCode: ::" + response.code());
                     SharedPreferences.Editor editor1 = getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE).edit();
-                    editor1.putString(Constants.REG_END_DATE, response.body().getExpire_date());
-                    editor1.apply();
-                    editor1.commit();
+//                    editor1.putString(Constants.REG_END_DATE, response.body().getExpire_date());
+//                    editor1.apply();
+//                    editor1.commit();
 
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(GONE);
@@ -2012,18 +2095,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     movieTitle = title;
 
 
-
                     tvName.setText(title);
                     //  tvRelease.setText("Release On  " + singleDetails.getRelease()); //fix by zws
                     tvDes.setText(singleDetails.getDescription());
 
 
-                    try{
+                    try {
                         Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
                                 .into(posterIv);
                         Picasso.get().load(singleDetails.getThumbnailUrl()).placeholder(R.drawable.poster_placeholder)
                                 .into(thumbIv);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         Picasso.get().load(R.drawable.shalkyi_thumbnail).placeholder(R.drawable.album_art_placeholder_large)
                                 .into(posterIv);
                         Picasso.get().load(R.drawable.shalkyi_thumbnail).placeholder(R.drawable.poster_placeholder)
@@ -2075,7 +2157,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     //-----server----------
                     List<Video> serverList = new ArrayList<>();
                     serverList.addAll(singleDetails.getVideos());
-                    for (int i = 0; i < serverList.size(); i++){
+                    for (int i = 0; i < serverList.size(); i++) {
                         Video video = serverList.get(i);
 
                         CommonModels models = new CommonModels();
@@ -2121,7 +2203,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         models.setTitle(relatedMovie.getTitle());
                         models.setImageUrl(relatedMovie.getThumbnailUrl());
                         models.setId(relatedMovie.getVideosId());
-                        models.setVideoType("movie");
+                        //models.setVideoType("movie");
+                        models.setVideoType("movie_1");
                         models.setIsPaid(relatedMovie.getIsPaid());
                         models.setIsPaid(relatedMovie.getIsPaid());
                         listRelated.add(models);
@@ -2151,19 +2234,18 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
 
-                }else if(response.code() == 201) {
+                } else if (response.code() == 201) {
                     showExpireDialog();
-                }else if(response.code() == 203)
-                {
+                } else if (response.code() == 203) {
                     showUserCodeErrorDialog();
-                }else
-                {
-                    showGeneralErrorDialog(response+"");
+                } else {
+                    showGeneralErrorDialog(response + "");
                 }
             }
 
             @Override
             public void onFailure(Call<SingleDetails> call, Throwable t) {
+                Log.d(TAG, "ERROR11: ConfigurationListener::" + t);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -2176,8 +2258,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(Call<FavoriteModel> call, retrofit2.Response<FavoriteModel> response) {
-                if (response.code() == 200){
-                    if (response.body().getStatus().equalsIgnoreCase("success")){
+                if (response.code() == 200) {
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
                         isFav = true;
                         imgAddFav.setBackgroundResource(R.drawable.ic_favorite_white);
                         imgAddFav.setVisibility(VISIBLE);
@@ -2198,14 +2280,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     private void removeFromFav() {
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
         Call<FavoriteModel> call = api.removeFromFavorite(Config.API_KEY, userId, id);
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(Call<FavoriteModel> call, retrofit2.Response<FavoriteModel> response) {
-                if (response.code() == 200){
-                    if (response.body().getStatus().equalsIgnoreCase("success")){
+                if (response.code() == 200) {
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
                         isFav = false;
                         new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
                         imgAddFav.setBackgroundResource(R.drawable.ic_favorite_border_white);
@@ -2225,10 +2307,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+//        ConnectivityManager connectivityManager
+//                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+//        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        return true;
     }
 
     private void addComment(String videoId, String userId, final String comments) {
@@ -2239,13 +2322,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         call.enqueue(new Callback<PostCommentModel>() {
             @Override
             public void onResponse(Call<PostCommentModel> call, retrofit2.Response<PostCommentModel> response) {
-                if (response.body().getStatus().equals("success")){
+                if (response.body().getStatus().equals("success")) {
                     rvComment.removeAllViews();
                     listComment.clear();
 //                    getComments();
                     etComment.setText("");
                     new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
-                }else {
+                } else {
                     new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
                 }
             }
@@ -2326,7 +2409,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     public void onBackPressed() {
         if (activeMovie) {
             setPlayerNormalScreen();
-            if (player != null){
+            if (player != null) {
                 player.setPlayWhenReady(false);
                 player.stop();
             }
@@ -2671,14 +2754,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         super.onRestoreInstanceState(savedInstanceState);
 
     }
-    private void showExpireDialog()
-    {
+
+    private void showExpireDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
         dialog.setContentView(R.layout.dialog_info);
 
-        TextView mm_text= dialog.findViewById(R.id.mm_text);
-        TextView eng_text= dialog.findViewById(R.id.eng_text);
+        TextView mm_text = dialog.findViewById(R.id.mm_text);
+        TextView eng_text = dialog.findViewById(R.id.eng_text);
 
         mm_text.setText("ကြည့်ရှုခွင့် သက်တမ်း ကုန်ဆုံးသွားပါပြီ။");
         eng_text.setText("Sorry, your account is expired!");
@@ -2692,7 +2775,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
 
-
         ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2709,17 +2791,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         dialog.show();
         dialog.getWindow().setAttributes(lp);
     }
-    private void showGeneralErrorDialog(String code)
-    {
+
+    private void showGeneralErrorDialog(String code) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
         dialog.setContentView(R.layout.dialog_info);
 
-        TextView mm_text= dialog.findViewById(R.id.mm_text);
-        TextView eng_text= dialog.findViewById(R.id.eng_text);
+        TextView mm_text = dialog.findViewById(R.id.mm_text);
+        TextView eng_text = dialog.findViewById(R.id.eng_text);
 
         mm_text.setText("တစ်စုံတစ်ခု မှားယွင်းနေပါသည်");
-        eng_text.setText("Sorry, something went wrong! " + code );
+        eng_text.setText("Sorry, something went wrong! " + code);
 
 
         dialog.setCancelable(false);
@@ -2730,7 +2812,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
 
-
         ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2748,14 +2829,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         dialog.getWindow().setAttributes(lp);
     }
 
-    private void showUserCodeErrorDialog()
-    {
+    private void showUserCodeErrorDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
         dialog.setContentView(R.layout.dialog_info);
 
-        TextView mm_text= dialog.findViewById(R.id.mm_text);
-        TextView eng_text= dialog.findViewById(R.id.eng_text);
+        TextView mm_text = dialog.findViewById(R.id.mm_text);
+        TextView eng_text = dialog.findViewById(R.id.eng_text);
 
         mm_text.setText("Code မှားယွင်းနေပါသည်။");
         eng_text.setText("Sorry, your code is invalid!");
@@ -2767,7 +2847,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         lp.copyFrom(dialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
 
 
         ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {

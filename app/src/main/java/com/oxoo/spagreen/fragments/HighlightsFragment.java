@@ -23,7 +23,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.oxoo.spagreen.Config;
 import com.oxoo.spagreen.MainActivity;
 import com.oxoo.spagreen.R;
-import com.oxoo.spagreen.adapters.CommonGridAdapter;
+import com.oxoo.spagreen.adapters.CommonGridAdapterHighlights;
 import com.oxoo.spagreen.database.DatabaseHelper;
 import com.oxoo.spagreen.models.CommonModels;
 import com.oxoo.spagreen.models.home_content.Video;
@@ -47,7 +47,7 @@ public class HighlightsFragment extends Fragment {
 
     private ShimmerFrameLayout shimmerFrameLayout;
     private RecyclerView recyclerView;
-    private CommonGridAdapter mAdapter;
+    private CommonGridAdapterHighlights mAdapter;
     private List<CommonModels> list = new ArrayList<>();
 
     private ApiResources apiResources;
@@ -138,7 +138,7 @@ public class HighlightsFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new CommonGridAdapter(getContext(), list);
+        mAdapter = new CommonGridAdapterHighlights(getContext(), list);
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -276,7 +276,9 @@ public class HighlightsFragment extends Fragment {
                     for (int i = 0; i < response.body().size(); i++){
                         Video video = response.body().get(i);
                         CommonModels models =new CommonModels();
-                        models.setImageUrl(video.getThumbnailUrl());
+                        //models.setImageUrl(video.getPosterUrl());
+                        models.setImageUrl(video.getPosterUrl());  //change from thumbnail url to posterurl
+                        System.out.println("poster url " + video.getPosterUrl());
                         models.setTitle(video.getTitle());
                         models.setQuality(video.getVideoQuality());
                         models.setVideoType("movie");
@@ -286,7 +288,7 @@ public class HighlightsFragment extends Fragment {
                         }else if(video.getIsHighlights().equals("1")) {
                             models.setVideoType("movie");
                         }else {
-                            models.setVideoType("movie_1");
+                            models.setVideoType("movie");
                         }
 
 

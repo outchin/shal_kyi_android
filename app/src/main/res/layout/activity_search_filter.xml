@@ -69,13 +69,14 @@
 
 
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:background="@drawable/btn_rounded_grey_outline"
-                    android:onClick="btToggleClick"
-                    android:text="Live TV"
-                    android:textAllCaps="false" />
+<!--                <Button-->
+<!--                    android:visibility="gone"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="34dp"-->
+<!--                    android:background="@drawable/btn_rounded_grey_outline"-->
+<!--                    android:onClick="btToggleClick"-->
+<!--                    android:text="Live TV"-->
+<!--                    android:textAllCaps="false" />-->
 
 
             </LinearLayout>
@@ -132,7 +133,7 @@
                         android:id="@+id/max_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2020"
+                        android:text="2030"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         />

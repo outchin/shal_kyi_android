@@ -1,13 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.exoplayer:extension-rtmp:2.7.3@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4dd80b2850aff105f1dc3ab0666d3f48/jetified-extension-rtmp-2.7.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/33527cad2342996a3388f953cc5a8e20/jetified-extension-rtmp-2.7.3/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/33527cad2342996a3388f953cc5a8e20/jetified-extension-rtmp-2.7.3/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/33527cad2342996a3388f953cc5a8e20/jetified-extension-rtmp-2.7.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/788f5b6edf25c307ab7ca33670ddade1/jetified-extension-rtmp-2.7.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/788f5b6edf25c307ab7ca33670ddade1/jetified-extension-rtmp-2.7.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/788f5b6edf25c307ab7ca33670ddade1/jetified-extension-rtmp-2.7.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/33527cad2342996a3388f953cc5a8e20/jetified-extension-rtmp-2.7.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/33527cad2342996a3388f953cc5a8e20/jetified-extension-rtmp-2.7.3/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.exoplayer/extension-rtmp/2.7.3/ec3399591cb253af1da7cd1c380f2ea53e831909/extension-rtmp-2.7.3-javadoc.jar!/" />

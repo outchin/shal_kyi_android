@@ -4,7 +4,9 @@ public class Config {
 
     // copy your api url from php admin dashboard & paste below
     //public static final String API_SERVER_URL = "http://demo.redtvlive.com/oxoo/v12/rest-api/";
-    public static final String API_SERVER_URL = "https://trnawnawbackup.click/mmsportlivetv/rest-api/";
+    public static final String API_SERVER_URL_DO = "https://trnawnawbackup.click/mmsportlivetv/rest-api/";
+  //public static final String API_SERVER_URL = "https://shalkyi.djduduchat.com/";
+    public static final String API_SERVER_URL = "https://trnawnawbackup.click/mmsportlivetv/rest-api/v100/";
 
     //copy your api key from php admin dashboard & paste below
     public static final String API_KEY = "5bbi9mbh3pqmzmlom2vgbeno";

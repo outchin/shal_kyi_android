@@ -15,8 +15,8 @@ public interface SignUpApi {
     @FormUrlEncoded
     @POST("signup")
     Call<User> signUp(@Header("API-KEY") String apiKey,
-                      @Field("email") String email,
-                      @Field("password") String password,
-                      @Field("name") String name);
+                      @Field("email") String email);
+//                      @Field("password") String password,
+//                      @Field("name") String name);
 
 }

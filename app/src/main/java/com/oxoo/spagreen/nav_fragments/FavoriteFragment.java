@@ -1,5 +1,7 @@
 package com.oxoo.spagreen.nav_fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.oxoo.spagreen.Config;
@@ -28,6 +31,7 @@ import com.oxoo.spagreen.database.DatabaseHelper;
 import com.oxoo.spagreen.models.CommonModels;
 import com.oxoo.spagreen.models.Movie;
 import com.oxoo.spagreen.network.RetrofitClient;
+import com.oxoo.spagreen.network.RetrofitClientDO;
 import com.oxoo.spagreen.network.apis.FavouriteApi;
 import com.oxoo.spagreen.network.model.AdsConfig;
 import com.oxoo.spagreen.utils.PreferenceUtils;
@@ -46,6 +50,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FavoriteFragment extends Fragment {
 
@@ -122,7 +128,9 @@ public class FavoriteFragment extends Fragment {
         pageTitle           = view.findViewById(R.id.page_title_tv);
         searchIv            = view.findViewById(R.id.search_iv);
 
-        userId = PreferenceUtils.getUserId(getContext());
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.USER_ID, MODE_PRIVATE);
+        userId = sharedPreferences.getString(Constants.USER_ID, null);
+//        userId = PreferenceUtils.getUserId(getContext());
 
         //----favorite's recycler view-----------------
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -240,9 +248,13 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void getData(String userID, int pageNum){
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.USER_ID, MODE_PRIVATE);
+        String userId = sharedPreferences.getString(Constants.USER_ID, null);
+
+        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<List<Movie>> call = api.getFavoriteList(Config.API_KEY, userID, pageNum);
+        Call<List<Movie>> call = api.getFavoriteList(Config.API_KEY, userId, pageNum);
         call.enqueue(new Callback<List<Movie>>() {
             @Override
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
@@ -268,7 +280,7 @@ public class FavoriteFragment extends Fragment {
                         models.setQuality(response.body().get(i).getVideoQuality());
 
                         if (response.body().get(i).getIsTvseries().equals("0")){
-                            models.setVideoType("movie");
+                            models.setVideoType("movie_1");
                         }else {
                             models.setVideoType("tvseries");
                         }

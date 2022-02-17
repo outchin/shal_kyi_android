@@ -103,7 +103,8 @@ public class SignUpActivity extends AppCompatActivity {
         dialog.show();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SignUpApi signUpApi = retrofit.create(SignUpApi.class);
-        Call<User> call = signUpApi.signUp(Config.API_KEY, email, pass, name);
+        Call<User> call = signUpApi.signUp(Config.API_KEY, email);
+//        Call<User> call = signUpApi.signUp(Config.API_KEY, email, pass, name);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

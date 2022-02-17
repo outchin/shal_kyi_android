@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/amazon"
                     android:hint="Code ရိုက်ထည့်ပါ"
-                    android:maxLength="6"
+                    android:maxLength="8"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"

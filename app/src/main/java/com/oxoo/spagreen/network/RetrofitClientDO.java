@@ -7,10 +7,10 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitClient {
+public class RetrofitClientDO {
 
-    //public static final String API_URL_EXTENSION = "/v100/";
-    public static final String API_URL_EXTENSION = "";
+    public static final String API_URL_EXTENSION = "/v100/";
+    //public static final String API_URL_EXTENSION = "";
     //copy your api username and password from php admin dashboard & paste below
     public static final String API_USER_NAME = "admin";
     public static final String API_PASSWORD = "1234";
@@ -26,7 +26,7 @@ public class RetrofitClient {
 
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(Config.API_SERVER_URL + API_URL_EXTENSION)
+                    .baseUrl(Config.API_SERVER_URL_DO + API_URL_EXTENSION)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

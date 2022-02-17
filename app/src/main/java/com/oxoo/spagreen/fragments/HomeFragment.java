@@ -209,6 +209,7 @@ public class HomeFragment extends Fragment {
         recyclerViewGenre.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewGenre.setHasFixedSize(true);
         recyclerViewGenre.setNestedScrollingEnabled(false);
+
         genreHomeAdapter = new GenreHomeAdapter(getContext(), listGenre);
         recyclerViewGenre.setAdapter(genreHomeAdapter);
 
@@ -308,6 +309,8 @@ public class HomeFragment extends Fragment {
 
                     //genre data
                      if (db.getConfigurationData().getAppConfig().getGenreVisible()) {
+                         System.out.println("all genere " + response.body().getAllGenre().size());
+                         System.out.println("all genere " + response.body().getAllGenre());
                          for (int i = 0; i < response.body().getAllGenre().size(); i++) {
                              AllGenre genre = response.body().getAllGenre().get(i);
                              CommonModels models = new CommonModels();
@@ -351,7 +354,8 @@ public class HomeFragment extends Fragment {
                          CommonModels models = new CommonModels();
                          models.setImageUrl(movie.getThumbnailUrl());
                          models.setTitle(movie.getTitle());
-                         models.setVideoType("movie");
+//                         models.setVideoType("movie");
+                         models.setVideoType("movie_1");
                          models.setReleaseDate(movie.getRelease());
                          models.setQuality(movie.getVideoQuality());
                          models.setId(movie.getVideosId());
@@ -392,7 +396,8 @@ public class HomeFragment extends Fragment {
                              commonModels.setIsPaid(video.getIsPaid());
 
                              if (video.getIsTvseries().equals("0")) {
-                                 commonModels.setVideoType("movie");
+                                 //commonModels.setVideoType("movie");
+                                 commonModels.setVideoType("movie_1"); //zws
                              } else {
                                  commonModels.setVideoType("tvseries");
                              }

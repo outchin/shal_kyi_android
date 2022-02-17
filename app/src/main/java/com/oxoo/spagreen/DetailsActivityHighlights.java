@@ -1,4 +1,4 @@
-package com.oxoo.spagreen;
+ package com.oxoo.spagreen;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -1972,6 +1972,7 @@ public class DetailsActivityHighlights extends AppCompatActivity implements Cast
         System.out.println("vId is " + vId);
         System.out.println("android_id is " + android_id);
         System.out.println("userCode is " + userCode);
+        System.out.println("API LINK " + "https://shalkyi.djduduchat.com/single_details?type="+vtype+"id="+vId+"device_id="+android_id+"code="+userCode);
         call.enqueue(new Callback<SingleDetails>() {
             @Override
             public void onResponse(Call<SingleDetails> call, retrofit2.Response<SingleDetails> response) {
@@ -1982,9 +1983,9 @@ public class DetailsActivityHighlights extends AppCompatActivity implements Cast
 
 
                     SharedPreferences.Editor editor1 = getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE).edit();
-                    editor1.putString(Constants.REG_END_DATE, response.body().getExpire_date());
-                    editor1.apply();
-                    editor1.commit();
+//                    editor1.putString(Constants.REG_END_DATE, response.body().getExpire_date());
+//                    editor1.apply();
+//                    editor1.commit();
 
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(GONE);
@@ -2120,7 +2121,7 @@ public class DetailsActivityHighlights extends AppCompatActivity implements Cast
                         models.setTitle(relatedMovie.getTitle());
                         models.setImageUrl(relatedMovie.getThumbnailUrl());
                         models.setId(relatedMovie.getVideosId());
-                        models.setVideoType("movie");
+                        models.setVideoType("movie"); //zws
                         models.setIsPaid(relatedMovie.getIsPaid());
                         models.setIsPaid(relatedMovie.getIsPaid());
                         listRelated.add(models);

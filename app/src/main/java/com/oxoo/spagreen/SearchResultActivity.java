@@ -18,12 +18,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.oxoo.spagreen.adapters.LiveTvAdapter2;
 import com.oxoo.spagreen.adapters.SearchAdapter;
 import com.oxoo.spagreen.network.RetrofitClient;
+import com.oxoo.spagreen.network.RetrofitClientDO;
 import com.oxoo.spagreen.network.apis.SearchApi;
 import com.oxoo.spagreen.network.model.CommonModel;
 import com.oxoo.spagreen.network.model.SearchModel;
@@ -88,6 +90,7 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
 
         query = getIntent().getStringExtra("q");
         type = getIntent().getStringExtra("type");
+
         range_to = getIntent().getIntExtra("range_to", 0);
         range_from = getIntent().getIntExtra("range_from", 0);
         tvCategoryId = getIntent().getIntExtra("tv_category_id", 0);
@@ -153,9 +156,10 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
 
 
     public void getSearchData() {
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit retrofit = RetrofitClientDO.getRetrofitInstance();
         SearchApi searchApi = retrofit.create(SearchApi.class);
         Call<SearchModel> call = searchApi.getSearchData(Config.API_KEY, query, type, range_to,range_from,tvCategoryId,genreId,countryId);
+        Toast.makeText(getApplicationContext(),query + " " + type + " " + range_to + " " + range_from + " " + tvCategoryId + " " + genreId + " " + countryId,Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<SearchModel>() {
             @Override
             public void onResponse(Call<SearchModel> call, retrofit2.Response<SearchModel> response) {
@@ -235,7 +239,7 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
         if (commonModel.getIsTvseries().equals("1")) {
             type = "tvseries";
         } else {
-            type = "movie";
+            type = "movie_1";
         }
 
         Intent intent=new Intent(this,DetailsActivity.class);

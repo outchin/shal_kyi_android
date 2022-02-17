@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface CheckCode1 {
  
-    @GET("checkCode4")
+    @GET("checkCodeShalKyi")
     Call<List<checkCodeModel>> checkCode(@Query("API-KEY") String apiKey,
                                          @Query("code") String code,
                                          @Query("device_id") String device_id);

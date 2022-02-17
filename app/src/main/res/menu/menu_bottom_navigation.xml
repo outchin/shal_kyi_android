@@ -18,8 +18,8 @@
     <item
         android:title="Series"
         android:icon="@drawable/icon_tv_series"/>
-<!--    <item-->
-<!--        android:title="@string/favorite"-->
-<!--        android:icon="@drawable/icon_favorite"/>-->
+    <item
+        android:title="@string/favorite"
+        android:icon="@drawable/icon_favorite"/>
 
 </menu>

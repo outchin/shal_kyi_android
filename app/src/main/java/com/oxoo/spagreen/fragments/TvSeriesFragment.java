@@ -239,6 +239,7 @@ public class TvSeriesFragment extends Fragment {
     }
 
     private void getTvSeriesData(int pageNum){
+        System.out.print("series data i scalled ");
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         TvSeriesApi api = retrofit.create(TvSeriesApi.class);
         Call<List<Video>> call = api.getTvSeries(Config.API_KEY, pageNum);

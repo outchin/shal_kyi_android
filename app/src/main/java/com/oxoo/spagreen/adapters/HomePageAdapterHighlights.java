@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.oxoo.spagreen.DetailsActivity;
+import com.oxoo.spagreen.DetailsActivityHighlights;
 import com.oxoo.spagreen.LoginActivity;
 import com.oxoo.spagreen.R;
 import com.oxoo.spagreen.models.CommonModels;
@@ -67,7 +68,7 @@ public class HomePageAdapterHighlights extends RecyclerView.Adapter<HomePageAdap
             public void onClick(View v) {
                 if (PreferenceUtils.isMandatoryLogin(ctx)){
                     if (PreferenceUtils.isLoggedIn(ctx)){
-                        Intent intent=new Intent(ctx, DetailsActivity.class);
+                        Intent intent=new Intent(ctx, DetailsActivityHighlights.class);
                         intent.putExtra("vType",obj.getVideoType());
                         intent.putExtra("id",obj.getId());
 
@@ -77,7 +78,7 @@ public class HomePageAdapterHighlights extends RecyclerView.Adapter<HomePageAdap
                         ctx.startActivity(new Intent(ctx, LoginActivity.class));
                     }
                 }else {
-                    Intent intent=new Intent(ctx, DetailsActivity.class);
+                    Intent intent=new Intent(ctx, DetailsActivityHighlights.class);
                     intent.putExtra("vType",obj.getVideoType());
                     intent.putExtra("id",obj.getId());
 

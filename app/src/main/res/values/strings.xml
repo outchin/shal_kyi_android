@@ -1,8 +1,8 @@
 <resources>
 
-    <string name="app_name">OXOO</string>
+    <string name="app_name">ShalKyi</string>
     <!--app_title for main navigation & home title-->
-    <string name="app_title">OXOO - Live TV &amp; Movie</string>
+    <string name="app_title">ShalKyi - Live TV &amp; Movie</string>
     <string name="app_version">1.2.3</string>
     <string name="contact_email">info@spagreen.net</string>
     <string name="copyright_text">Copyright @ Spagreen \nAll right reserved</string>
@@ -132,7 +132,7 @@
 
     <!--search range-->
     <string name="year_range_start">1900</string>
-    <string name="year_range_end">2020</string>
+    <string name="year_range_end">2030</string>
 
     <!-- Example General settings -->
 
@@ -287,7 +287,7 @@
     <string name="no_video_found">No video found</string>
     <string name="failed_to_communicate">Failed to communicate with server. \nPlease check your API configuration</string>
     <string name="no_configuration_data_found">No configuration data found.</string>
-    <string name="please_login_first_to_see_favorite_list">Please login to see favorite list.</string>
+    <string name="please_login_first_to_see_favorite_list">Please subscribe to see your favorite list.</string>
     <string name="welcome_text">Welcome to MySpectrum</string>
     <string name="continue_bold"><b>Continue</b></string>
     <string name="buy_code_bold"><b>Code ဝယ်ရန်</b></string>
