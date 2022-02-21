@@ -130,33 +130,38 @@ public class VerificationActivity extends AppCompatActivity {
                     checkCodeBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String userCode = accCodeText.getText().toString();
-                            ProgressDialog progressDialog= showLoadingDialog();
-                            Retrofit retrofit = RetrofitClient.getRetrofitInstance();
-                            CheckCode1 api = retrofit.create(CheckCode1.class);
-                            Call<List<checkCodeModel>> call = api.checkCode(Config.API_KEY, userCode, android_id);
-                            call.enqueue(new Callback<List<checkCodeModel>>() {
-                                @Override
-                                public void onResponse(Call<List<checkCodeModel>> call, Response<List<checkCodeModel>> response) {
-                                    progressDialog.dismiss();
-                                    if(response.code()==200)
-                                    {
-                                        checkCodeModel codeModel = (checkCodeModel) response.body().get(0);
-                                        showSuccessDialog(userCode,codeModel.getRegistration_end_at());
-                                    }else
-                                    {
-                                        //Toast.makeText(getApplicationContext(),response.code()+"",Toast.LENGTH_SHORT).show();
-                                        checkCodeModel codeModel = (checkCodeModel) response.body().get(0);
-                                        showErrorDialog(codeModel.getDevice_id(),codeModel.getCode(),codeModel.getRegistration_end_at(),response.code()+"");
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<checkCodeModel>> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(),call+"err1" + t,Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            showSuccessDialog("aabbcc","02-04-2020","allpackage");
+//                            String userCode = accCodeText.getText().toString();
+//                            ProgressDialog progressDialog= showLoadingDialog();
+//                            Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+//                            CheckCode1 api = retrofit.create(CheckCode1.class);
+//                            Call<List<checkCodeModel>> call = api.checkCode(Config.API_KEY, userCode, android_id);
+//                            call.enqueue(new Callback<List<checkCodeModel>>() {
+//                                @Override
+//                                public void onResponse(Call<List<checkCodeModel>> call, Response<List<checkCodeModel>> response) {
+//                                    progressDialog.dismiss();
+//                                    if(response.code()==200)
+//                                    {
+//
+//                                        checkCodeModel codeModel = (checkCodeModel) response.body().get(0);
+//                                        showSuccessDialog(userCode,codeModel.getRegistration_end_at(),codeModel.getType());
+//                                        Toast.makeText(getApplicationContext(),codeModel.getType(),Toast.LENGTH_SHORT).show();
+//
+//
+//                                    }else
+//                                    {
+//                                        //Toast.makeText(getApplicationContext(),response.code()+"",Toast.LENGTH_SHORT).show();
+//                                        checkCodeModel codeModel = (checkCodeModel) response.body().get(0);
+//                                        showErrorDialog(codeModel.getDevice_id(),codeModel.getCode(),codeModel.getRegistration_end_at(),response.code()+"");
+//                                    }
+//
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<List<checkCodeModel>> call, Throwable t) {
+//                                    Toast.makeText(getApplicationContext(),call+"err1" + t,Toast.LENGTH_LONG).show();
+//                                }
+//                            });
                         }
                     });
                 } else {
@@ -290,9 +295,11 @@ public class VerificationActivity extends AppCompatActivity {
         return phrase.toString();
     }
 
-    private void showSuccessDialog(String userCode, String registration_end_at) {
+    private void showSuccessDialog(String userCode, String registration_end_at, String subscription_type) {
         SharedPreferences.Editor editor = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE).edit();
         SharedPreferences.Editor editor1 = getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor2 = getSharedPreferences(Constants.SUBSCRIPTION_TYPE, MODE_PRIVATE).edit();
+
         editor.putString(Constants.USER_CODE, userCode);
         editor.apply();
         editor.commit();
@@ -300,6 +307,10 @@ public class VerificationActivity extends AppCompatActivity {
         editor1.putString(Constants.REG_END_DATE, registration_end_at);
         editor1.apply();
         editor1.commit();
+
+        editor2.putString(Constants.SUBSCRIPTION_TYPE, subscription_type);
+        editor2.apply();
+        editor2.commit();
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before

@@ -13,5 +13,8 @@ public interface GenreApi {
     @GET("all_genre")
     Call<List<AllGenre>> getGenre(@Header("API-KEY") String apiKey);
 
+    @GET("eighteen_genre")
+    Call<List<AllGenre>> getEighteenGenre(@Header("API-KEY") String apiKey);
+
 
 }

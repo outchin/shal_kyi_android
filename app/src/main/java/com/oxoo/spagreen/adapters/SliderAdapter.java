@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.islamkhsh.CardSliderAdapter;
@@ -37,7 +38,7 @@ public class SliderAdapter extends CardSliderAdapter<Slide> {
             TextView textView = view.findViewById(R.id.textView);
 
             textView.setText(slide.getTitle());
-            RoundedImageView imageView = view.findViewById(R.id.imageview);
+            ImageView imageView = view.findViewById(R.id.imageview);
             System.out.print("image link " + slide.getImageLink());
             try{
                 Picasso.get().load(slide.getImageLink()).into(imageView);

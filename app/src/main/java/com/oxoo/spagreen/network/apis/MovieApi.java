@@ -15,6 +15,10 @@ public interface MovieApi {
     Call<List<Video>> getMovies(@Header("API-KEY") String apiKey,
                                 @Query("page") int pahe);
 
+    @GET("eighteen")
+    Call<List<Video>> getEighteen(@Header("API-KEY") String apiKey,
+                                @Query("page") int pahe);
+
     @GET("highlights")
     Call<List<Video>> getHighlights(@Header("API-KEY") String apiKey,
                                 @Query("page") int pahe);

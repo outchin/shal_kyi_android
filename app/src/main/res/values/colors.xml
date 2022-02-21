@@ -77,4 +77,7 @@
     <color name="bottomifyBackgroundColorLight">#FF9F96</color>
     <color name="bottomifyPassiveColorLight">#585858</color>
     <color name="bottomifyPressedColorLight">#2E2F33</color>
+
+    <color name="subscription_txt_color">#5C6BC0</color>
+    <color name="expiration_txt_color">#5C6BC0</color>
 </resources>

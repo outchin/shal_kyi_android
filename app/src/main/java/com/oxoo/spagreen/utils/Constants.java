@@ -19,6 +19,7 @@ public class Constants {
     public static final String REG_END_DATE = "registrationEndAt";
     public static final String IS_SIGN_UP = "is_sign_up";
     public static final String USER_ID = "user_id";
+    public static final String SUBSCRIPTION_TYPE = "subscription_type";
 
     public static String workId;
 

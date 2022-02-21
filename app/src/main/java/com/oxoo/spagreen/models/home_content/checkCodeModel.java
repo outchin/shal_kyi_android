@@ -20,6 +20,18 @@ public class checkCodeModel {
     @Expose
     private String device_id;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @SerializedName("type")
+    @Expose
+    private String type;
+
     @SerializedName("registration_end_at")
     @Expose
     private String registration_end_at;

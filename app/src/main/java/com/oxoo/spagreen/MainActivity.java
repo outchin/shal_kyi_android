@@ -57,11 +57,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.jem.rubberpicker.RubberRangePicker;
 import com.oxoo.spagreen.adapters.NavigationAdapter;
 import com.oxoo.spagreen.database.DatabaseHelper;
+import com.oxoo.spagreen.fragments.EighteenFragment;
 import com.oxoo.spagreen.fragments.LiveTvFragment;
 import com.oxoo.spagreen.fragments.MoviesFragment;
 import com.oxoo.spagreen.fragments.TvSeriesFragment;
 import com.oxoo.spagreen.models.NavigationModel;
 import com.oxoo.spagreen.nav_fragments.CountryFragment;
+import com.oxoo.spagreen.nav_fragments.EighteenGenreFragment;
 import com.oxoo.spagreen.nav_fragments.FavoriteFragment;
 import com.oxoo.spagreen.nav_fragments.GenreFragment;
 import com.oxoo.spagreen.nav_fragments.MainHomeFragment;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean[] selectedtype = new boolean[3]; // 0 for movie, 1 for series, 2 for live tv....
     private DatabaseHelper db;
 
+    private TextView expiration_date, subscription_type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = new DatabaseHelper(MainActivity.this);
@@ -133,12 +136,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navMenuStyle = db.getConfigurationData().getAppConfig().getMenu();
 
         //---analytics-----------
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "main_activity");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "activity");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+//        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         if (sharedPreferences.getBoolean("firstTime", true)) {
             showTermServicesDialog();
@@ -160,6 +163,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout = findViewById(R.id.drawer_layout);
         navHeaderLayout = findViewById(R.id.nav_head_layout);
         themeSwitch = findViewById(R.id.theme_switch);
+
+        expiration_date = (TextView) findViewById(R.id.end_date);
+        subscription_type = (TextView) findViewById(R.id.acc_type);
+
+
+
+        SharedPreferences sub_type = getApplicationContext().getSharedPreferences(Constants.SUBSCRIPTION_TYPE, MODE_PRIVATE);
+        SharedPreferences end_date = getApplicationContext().getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE);
+
+        String u_sub_type = sub_type.getString(Constants.SUBSCRIPTION_TYPE, "");
+        String u_end_date = end_date.getString(Constants.REG_END_DATE, "");
+
+
+        if (!u_sub_type.equals("")) {
+            if (u_sub_type.equals("allpackage")) {
+                u_sub_type = "Premium All Channel Package";
+            }
+            else if (u_sub_type.equals("matches")) {
+                u_sub_type = "Premium Sports Package";
+            }
+            else if (u_sub_type.equals("movies")) {
+                u_sub_type = "Premium Movie Package";
+            }
+        }else
+        {
+            u_sub_type = "Trial Package";
+        }
+        expiration_date.setText("Expiration Date : " + u_end_date);
+        expiration_date.setTextColor(getResources().getColor(R.color.expiration_txt_color));
+
+        subscription_type.setText("Subscription Type : " + u_sub_type);
+        subscription_type.setTextColor(getResources().getColor(R.color.subscription_txt_color));
+
 
         if (isDark) {
             themeSwitch.setChecked(true);
@@ -245,6 +281,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else if (position==5){
                     loadFragment(new CountryFragment());
+                }
+                else if (position==6){
+                    loadFragment(new EighteenGenreFragment());
+                }
+                else if (position==7){
+                    Intent intent=new Intent(MainActivity.this,SettingsActivity.class);
+                    startActivity(intent);
+                }else if (position==8){
+                    Intent intent=new Intent(MainActivity.this,DownloadActivity.class);
+                    startActivity(intent);
                 }
                 else {
                     if (status){
@@ -476,6 +522,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Button declineBt = dialog.findViewById(R.id.bt_decline);
         Button acceptBt = dialog.findViewById(R.id.bt_accept);
 
+
         if (isDark) {
             declineBt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey_outline));
             acceptBt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_dark));
@@ -532,22 +579,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e("value", "Permission Granted, Now you can use local drive .");
-
-                    // creating the download directory named oxoo
-                    createDownloadDir();
-
-                } else {
-                    Log.e("value", "Permission Denied, You cannot use local drive .");
-                }
-                break;
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case PERMISSION_REQUEST_CODE:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    Log.e("value", "Permission Granted, Now you can use local drive .");
+//
+//                    // creating the download directory named oxoo
+//                    createDownloadDir();
+//
+//                } else {
+//                    Log.e("value", "Permission Denied, You cannot use local drive .");
+//                }
+//                break;
+//        }
+//    }
 
     // creating download folder
     public void createDownloadDir() {

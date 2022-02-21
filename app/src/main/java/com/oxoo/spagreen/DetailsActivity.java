@@ -1305,7 +1305,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 listServer.clear();
                 listServer.clear();
 
-                downloadBt.setVisibility(GONE);
+//                downloadBt.setVisibility(GONE);
                 watchNowBt.setVisibility(GONE);
 
                 // cast & crew adapter
@@ -1676,40 +1676,55 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
             if(!userCode.equals("")) //user has code
             {
-
+                //user can watch this
+                contentDetails.setVisibility(VISIBLE);
+                subscriptionLayout.setVisibility(GONE);
             }else{ //user has no code
-                startActivity(new Intent(DetailsActivity.this, FirebaseSignUpActivity.class));
-                finish();
+                showSubscribedMovieToDownloadDialog();
             }
 
-//            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-//                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-//                    if (PreferenceUtils.isValid(DetailsActivity.this)) {
-//                        contentDetails.setVisibility(VISIBLE);
-//                        subscriptionLayout.setVisibility(GONE);
-//                        Log.e("SUBCHECK", "validity: " + PreferenceUtils.isValid(DetailsActivity.this));
-//
-//                    } else {
-//                        Log.e("SUBCHECK", "not valid");
-//                        /*contentDetails.setVisibility(GONE);
-//                        subscriptionLayout.setVisibility(VISIBLE);*/
-//                        PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-//                        //paidControl(isPaid);
-//                    }
-//                } else {
-//                    Log.e("SUBCHECK", "not active plan");
-//                    contentDetails.setVisibility(GONE);
-//                    subscriptionLayout.setVisibility(VISIBLE);
-//                }
-//            } else {
-//                startActivity(new Intent(DetailsActivity.this, FirebaseSignUpActivity.class));
-//                finish();
-//            }
 
         } else {
             //free content
             contentDetails.setVisibility(VISIBLE);
             subscriptionLayout.setVisibility(GONE);
+        }
+    }
+
+    private void eighteenControl(String isEighteen) {
+        if (isEighteen.equals("1")) {
+
+
+            SharedPreferences sharedPreferences = getSharedPreferences(Constants.SUBSCRIPTION_TYPE, MODE_PRIVATE);
+            String subscription_type = sharedPreferences.getString(Constants.SUBSCRIPTION_TYPE, "");
+            if(subscription_type.equals("allpackage")) //user has all package so he can watch this
+            {
+                //user can watch this
+                contentDetails.setVisibility(VISIBLE);
+                subscriptionLayout.setVisibility(GONE);
+            }else{ //user has no code
+                showSubscribedAllPkgDialog();
+            }
+
+
+        } else {
+            //free content
+            contentDetails.setVisibility(VISIBLE);
+            subscriptionLayout.setVisibility(GONE);
+        }
+    }
+
+
+    private void downloadControl() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.USER_CODE, MODE_PRIVATE);
+        String userCode = sharedPreferences.getString(Constants.USER_CODE, "");
+        if(!userCode.equals("")) //user has code
+        {
+            //user can watch this
+            contentDetails.setVisibility(VISIBLE);
+            subscriptionLayout.setVisibility(GONE);
+        }else{ //user has no code
+            showSubscribedMovieDialog();
         }
     }
 
@@ -1765,6 +1780,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.setVisibility(GONE);
                         paidControl(response.body().getIsPaid());
+                        eighteenControl(response.body().getIs_eighteen());
 
                         SingleDetailsTV detailsModel = response.body();
 
@@ -1883,7 +1899,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     SingleDetails singleDetails = response.body();
                     String isPaid = singleDetails.getIsPaid();
+                    String isEighteen = singleDetails.getIsEighteen();
                     paidControl(isPaid);
+                    eighteenControl(isEighteen);
 
                     title = singleDetails.getTitle();
                     sereisTitleTv.setText(title);
@@ -2076,6 +2094,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     SingleDetails singleDetails = response.body();
                     paidControl(singleDetails.getIsPaid());
+                    eighteenControl(singleDetails.getIsEighteen());
                     Log.e("Download", "size: " + singleDetails.getDownloadLinks().size());
                     Log.e("Download", "title: " + singleDetails.getTitle());
                     download_check = singleDetails.getEnableDownload();
@@ -2083,13 +2102,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     if (download_check.equals("1")) {
                         download_text.setVisibility(VISIBLE);
 
-                        downloadBt.setVisibility(GONE);
+//                        downloadBt.setVisibility(GONE);
 
                         //This is visible default and fix to gone by zws
                         //  downloadBt.setVisibility(VISIBLE);
                     } else {
                         download_text.setVisibility(GONE);
-                        downloadBt.setVisibility(GONE);
+//                        downloadBt.setVisibility(GONE);
                     }
                     title = singleDetails.getTitle();
                     movieTitle = title;
@@ -2779,6 +2798,117 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailsActivity.this, DetailsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
+
+    private void showSubscribedMovieDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_info);
+
+        TextView mm_text = dialog.findViewById(R.id.mm_text);
+        TextView eng_text = dialog.findViewById(R.id.eng_text);
+
+        mm_text.setText(R.string.need_to_subscribe_movie_pkg);
+        eng_text.setText(R.string.need_to_subscribe_movie_pkg_eng);
+
+
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this, VerificationActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
+
+    private void showSubscribedMovieToDownloadDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_info);
+
+        TextView mm_text = dialog.findViewById(R.id.mm_text);
+        TextView eng_text = dialog.findViewById(R.id.eng_text);
+
+        mm_text.setText(R.string.need_to_subscribe_movie_to_download);
+        eng_text.setText(R.string.need_to_subscribe_movie_to_download_eng);
+
+
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this, VerificationActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
+
+    private void showSubscribedAllPkgDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_info);
+
+        TextView mm_text = dialog.findViewById(R.id.mm_text);
+        TextView eng_text = dialog.findViewById(R.id.eng_text);
+
+        mm_text.setText(R.string.need_to_subscribe_all_pkg);
+        eng_text.setText(R.string.need_to_subscribe_all_pkg_eng);
+
+
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this, VerificationActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

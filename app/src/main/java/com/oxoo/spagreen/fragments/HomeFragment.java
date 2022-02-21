@@ -2,6 +2,7 @@ package com.oxoo.spagreen.fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -65,6 +66,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class HomeFragment extends Fragment {
 
@@ -106,6 +109,7 @@ public class HomeFragment extends Fragment {
     private ImageView menuIv, searchIv;
     private TextView pageTitle;
     private DatabaseHelper db = new DatabaseHelper(getContext());
+    private TextView expiration_date, subscription_type;
 
     @Nullable
     @Override
@@ -121,28 +125,54 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = new DatabaseHelper(getContext());
 
-        adView              = view.findViewById(R.id.adView);
-        adView1             = view.findViewById(R.id.adView1);
-        btnMoreSeries       = view.findViewById(R.id.btn_more_series);
-        btnMoreTv           = view.findViewById(R.id.btn_more_tv);
-        btnMoreMovie        = view.findViewById(R.id.btn_more_movie);
-        shimmerFrameLayout  = view.findViewById(R.id.shimmer_view_container);
-        tvNoItem            = view.findViewById(R.id.tv_noitem);
-        coordinatorLayout   = view.findViewById(R.id.coordinator_lyt);
-        swipeRefreshLayout  = view.findViewById(R.id.swipe_layout);
-        scrollView          = view.findViewById(R.id.scrollView);
-        sliderLayout        = view.findViewById(R.id.slider_layout);
-        genreRv             = view.findViewById(R.id.genre_rv);
-        countryRv           = view.findViewById(R.id.country_rv);
-        genreLayout         = view.findViewById(R.id.genre_layout);
-        countryLayout       = view.findViewById(R.id.country_layout);
-        cViewPager          = view.findViewById(R.id.c_viewPager);
-        searchRootLayout    = view.findViewById(R.id.search_root_layout);
-        searchBar           = view.findViewById(R.id.search_bar);
-        menuIv              = view.findViewById(R.id.bt_menu);
-        pageTitle           = view.findViewById(R.id.page_title_tv);
-        searchIv           = view.findViewById(R.id.search_iv);
+        adView = view.findViewById(R.id.adView);
+        adView1 = view.findViewById(R.id.adView1);
+        btnMoreSeries = view.findViewById(R.id.btn_more_series);
+        btnMoreTv = view.findViewById(R.id.btn_more_tv);
+        btnMoreMovie = view.findViewById(R.id.btn_more_movie);
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
+        tvNoItem = view.findViewById(R.id.tv_noitem);
+        coordinatorLayout = view.findViewById(R.id.coordinator_lyt);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_layout);
+        scrollView = view.findViewById(R.id.scrollView);
+        sliderLayout = view.findViewById(R.id.slider_layout);
+        genreRv = view.findViewById(R.id.genre_rv);
+        countryRv = view.findViewById(R.id.country_rv);
+        genreLayout = view.findViewById(R.id.genre_layout);
+        countryLayout = view.findViewById(R.id.country_layout);
+        cViewPager = view.findViewById(R.id.c_viewPager);
+        searchRootLayout = view.findViewById(R.id.search_root_layout);
+        searchBar = view.findViewById(R.id.search_bar);
+        menuIv = view.findViewById(R.id.bt_menu);
+        pageTitle = view.findViewById(R.id.page_title_tv);
+        searchIv = view.findViewById(R.id.search_iv);
 
+        expiration_date = (TextView) view.findViewById(R.id.user_expiration_date);
+        subscription_type = (TextView) view.findViewById(R.id.user_sub_type);
+
+
+        SharedPreferences sub_type = getContext().getSharedPreferences(Constants.SUBSCRIPTION_TYPE, MODE_PRIVATE);
+        SharedPreferences end_date = getContext().getSharedPreferences(Constants.REG_END_DATE, MODE_PRIVATE);
+
+        String u_sub_type = sub_type.getString(Constants.SUBSCRIPTION_TYPE, "");
+        String u_end_date = end_date.getString(Constants.REG_END_DATE, "");
+
+        if (!u_sub_type.equals("")) {
+            if (u_sub_type.equals("allpackage")) {
+                u_sub_type = "Premium All Channel Package";
+            }
+            else if (u_sub_type.equals("matches")) {
+                u_sub_type = "Premium Sports Package";
+            }
+            else if (u_sub_type.equals("movies")) {
+                u_sub_type = "Premium Movie Package";
+            }
+        }else
+        {
+            u_sub_type = "Trial Package";
+        }
+        expiration_date.setText("Expiration Date : " + u_end_date);
+        subscription_type.setText("Subscription Type : " + u_sub_type);
 
         if (db.getConfigurationData().getAppConfig().getGenreVisible()) {
             genreLayout.setVisibility(View.VISIBLE);
@@ -286,7 +316,7 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<HomeContent>() {
             @Override
             public void onResponse(Call<HomeContent> call, retrofit2.Response<HomeContent> response) {
-                 if (response.code() == 200){
+                if (response.code() == 200) {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
@@ -297,9 +327,9 @@ public class HomeFragment extends Fragment {
                     Slider slider = response.body().getSlider();
                     if (slider.getSliderType().equalsIgnoreCase("disable")) {
                         sliderLayout.setVisibility(View.GONE);
-                    }else if (slider.getSliderType().equalsIgnoreCase("movie")){
+                    } else if (slider.getSliderType().equalsIgnoreCase("movie")) {
 
-                    }else if (slider.getSliderType().equalsIgnoreCase("image")){
+                    } else if (slider.getSliderType().equalsIgnoreCase("image")) {
 
                     }
 
@@ -308,119 +338,119 @@ public class HomeFragment extends Fragment {
                     sliderAdapter.notifyDataSetChanged();
 
                     //genre data
-                     if (db.getConfigurationData().getAppConfig().getGenreVisible()) {
-                         System.out.println("all genere " + response.body().getAllGenre().size());
-                         System.out.println("all genere " + response.body().getAllGenre());
-                         for (int i = 0; i < response.body().getAllGenre().size(); i++) {
-                             AllGenre genre = response.body().getAllGenre().get(i);
-                             CommonModels models = new CommonModels();
-                             models.setId(genre.getGenreId());
-                             models.setTitle(genre.getName());
-                             models.setImageUrl(genre.getImageUrl());
-                             genreList.add(models);
-                         }
-                         genreAdapter.notifyDataSetChanged();
-                     }
+                    if (db.getConfigurationData().getAppConfig().getGenreVisible()) {
+                        System.out.println("all genere " + response.body().getAllGenre().size());
+                        System.out.println("all genere " + response.body().getAllGenre());
+                        for (int i = 0; i < response.body().getAllGenre().size(); i++) {
+                            AllGenre genre = response.body().getAllGenre().get(i);
+                            CommonModels models = new CommonModels();
+                            models.setId(genre.getGenreId());
+                            models.setTitle(genre.getName());
+                            models.setImageUrl(genre.getImageUrl());
+                            genreList.add(models);
+                        }
+                        genreAdapter.notifyDataSetChanged();
+                    }
 
-                     //country data
-                     if (db.getConfigurationData().getAppConfig().getCountryVisible()) {
-                         for (int i = 0; i < response.body().getAllCountry().size(); i++) {
-                             AllCountry country = response.body().getAllCountry().get(i);
-                             CommonModels models = new CommonModels();
-                             models.setId(country.getCountryId());
-                             models.setTitle(country.getName());
-                             models.setImageUrl(country.getImageUrl());
-                             countryList.add(models);
-                         }
-                         countryAdapter.notifyDataSetChanged();
-                     }
+                    //country data
+                    if (db.getConfigurationData().getAppConfig().getCountryVisible()) {
+                        for (int i = 0; i < response.body().getAllCountry().size(); i++) {
+                            AllCountry country = response.body().getAllCountry().get(i);
+                            CommonModels models = new CommonModels();
+                            models.setId(country.getCountryId());
+                            models.setTitle(country.getName());
+                            models.setImageUrl(country.getImageUrl());
+                            countryList.add(models);
+                        }
+                        countryAdapter.notifyDataSetChanged();
+                    }
 
-                     //tv channel data
-                     for (int i = 0; i < response.body().getFeaturedTvChannel().size(); i++){
-                         FeaturedTvChannel tvChannel = response.body().getFeaturedTvChannel().get(i);
-                         CommonModels models = new CommonModels();
-                         models.setImageUrl(tvChannel.getPosterUrl());
-                         models.setTitle(tvChannel.getTvName());
-                         models.setVideoType("tv");
-                         models.setId(tvChannel.getLiveTvId());
-                         models.setIsPaid(tvChannel.getIsPaid());
-                         listTv.add(models);
-                     }
-                     adapterTv.notifyDataSetChanged();
+                    //tv channel data
+                    for (int i = 0; i < response.body().getFeaturedTvChannel().size(); i++) {
+                        FeaturedTvChannel tvChannel = response.body().getFeaturedTvChannel().get(i);
+                        CommonModels models = new CommonModels();
+                        models.setImageUrl(tvChannel.getPosterUrl());
+                        models.setTitle(tvChannel.getTvName());
+                        models.setVideoType("tv");
+                        models.setId(tvChannel.getLiveTvId());
+                        models.setIsPaid(tvChannel.getIsPaid());
+                        listTv.add(models);
+                    }
+                    adapterTv.notifyDataSetChanged();
 
-                     //latest movies data
-                     for (int i = 0; i < response.body().getLatestMovies().size(); i++){
-                         LatestMovie movie = response.body().getLatestMovies().get(i);
-                         CommonModels models = new CommonModels();
-                         models.setImageUrl(movie.getThumbnailUrl());
-                         models.setTitle(movie.getTitle());
+                    //latest movies data
+                    for (int i = 0; i < response.body().getLatestMovies().size(); i++) {
+                        LatestMovie movie = response.body().getLatestMovies().get(i);
+                        CommonModels models = new CommonModels();
+                        models.setImageUrl(movie.getThumbnailUrl());
+                        models.setTitle(movie.getTitle());
 //                         models.setVideoType("movie");
-                         models.setVideoType("movie_1");
-                         models.setReleaseDate(movie.getRelease());
-                         models.setQuality(movie.getVideoQuality());
-                         models.setId(movie.getVideosId());
-                         models.setIsPaid(movie.getIsPaid());
-                         listMovie.add(models);
-                     }
-                     adapterMovie.notifyDataSetChanged();
+                        models.setVideoType("movie_1");
+                        models.setReleaseDate(movie.getRelease());
+                        models.setQuality(movie.getVideoQuality());
+                        models.setId(movie.getVideosId());
+                        models.setIsPaid(movie.getIsPaid());
+                        listMovie.add(models);
+                    }
+                    adapterMovie.notifyDataSetChanged();
 
-                     //latest tv series
-                     for (int i = 0; i < response.body().getLatestTvseries().size(); i++){
-                         LatestTvseries tvSeries = response.body().getLatestTvseries().get(i);
-                         CommonModels models = new CommonModels();
-                         models.setImageUrl(tvSeries.getThumbnailUrl());
-                         models.setTitle(tvSeries.getTitle());
-                         models.setVideoType("tvseries");
-                         models.setReleaseDate(tvSeries.getRelease());
-                         models.setQuality(tvSeries.getVideoQuality());
-                         models.setId(tvSeries.getVideosId());
-                         models.setIsPaid(tvSeries.getIsPaid());
-                         listSeries.add(models);
-                     }
-                     adapterSeries.notifyDataSetChanged();
+                    //latest tv series
+                    for (int i = 0; i < response.body().getLatestTvseries().size(); i++) {
+                        LatestTvseries tvSeries = response.body().getLatestTvseries().get(i);
+                        CommonModels models = new CommonModels();
+                        models.setImageUrl(tvSeries.getThumbnailUrl());
+                        models.setTitle(tvSeries.getTitle());
+                        models.setVideoType("tvseries");
+                        models.setReleaseDate(tvSeries.getRelease());
+                        models.setQuality(tvSeries.getVideoQuality());
+                        models.setId(tvSeries.getVideosId());
+                        models.setIsPaid(tvSeries.getIsPaid());
+                        listSeries.add(models);
+                    }
+                    adapterSeries.notifyDataSetChanged();
 
-                     //get data by genre
-                     for (int i = 0; i < response.body().getFeaturesGenreAndMovie().size(); i++){
-                         FeaturesGenreAndMovie genreAndMovie = response.body().getFeaturesGenreAndMovie().get(i);
-                         GenreModel models = new GenreModel();
+                    //get data by genre
+                    for (int i = 0; i < response.body().getFeaturesGenreAndMovie().size(); i++) {
+                        FeaturesGenreAndMovie genreAndMovie = response.body().getFeaturesGenreAndMovie().get(i);
+                        GenreModel models = new GenreModel();
 
-                         models.setName(genreAndMovie.getName());
-                         models.setId(genreAndMovie.getGenreId());
-                         List<CommonModels> listGenreMovie = new ArrayList<>();
-                         for (int j = 0; j < genreAndMovie.getVideos().size(); j++){
-                             Video video = genreAndMovie.getVideos().get(j);
-                             CommonModels commonModels = new CommonModels();
+                        models.setName(genreAndMovie.getName());
+                        models.setId(genreAndMovie.getGenreId());
+                        List<CommonModels> listGenreMovie = new ArrayList<>();
+                        for (int j = 0; j < genreAndMovie.getVideos().size(); j++) {
+                            Video video = genreAndMovie.getVideos().get(j);
+                            CommonModels commonModels = new CommonModels();
 
-                             commonModels.setId(video.getVideosId());
-                             commonModels.setTitle(video.getTitle());
-                             commonModels.setIsPaid(video.getIsPaid());
+                            commonModels.setId(video.getVideosId());
+                            commonModels.setTitle(video.getTitle());
+                            commonModels.setIsPaid(video.getIsPaid());
 
-                             if (video.getIsTvseries().equals("0")) {
-                                 //commonModels.setVideoType("movie");
-                                 commonModels.setVideoType("movie_1"); //zws
-                             } else {
-                                 commonModels.setVideoType("tvseries");
-                             }
+                            if (video.getIsTvseries().equals("0")) {
+                                //commonModels.setVideoType("movie");
+                                commonModels.setVideoType("movie_1"); //zws
+                            } else {
+                                commonModels.setVideoType("tvseries");
+                            }
 
-                             commonModels.setReleaseDate(video.getRelease());
-                             commonModels.setQuality(video.getVideoQuality());
-                             commonModels.setImageUrl(video.getThumbnailUrl());
+                            commonModels.setReleaseDate(video.getRelease());
+                            commonModels.setQuality(video.getVideoQuality());
+                            commonModels.setImageUrl(video.getThumbnailUrl());
 
-                             listGenreMovie.add(commonModels);
-                         }
-                         models.setList(listGenreMovie);
+                            listGenreMovie.add(commonModels);
+                        }
+                        models.setList(listGenreMovie);
 
-                         listGenre.add(models);
-                         genreHomeAdapter.notifyDataSetChanged();
-                     }
+                        listGenre.add(models);
+                        genreHomeAdapter.notifyDataSetChanged();
+                    }
 
-                }else {
-                     swipeRefreshLayout.setRefreshing(false);
-                     shimmerFrameLayout.stopShimmer();
-                     shimmerFrameLayout.setVisibility(View.GONE);
-                     coordinatorLayout.setVisibility(View.VISIBLE);
-                     scrollView.setVisibility(View.GONE);
-                 }
+                } else {
+                    swipeRefreshLayout.setRefreshing(false);
+                    shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.setVisibility(View.GONE);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
+                    scrollView.setVisibility(View.GONE);
+                }
 
             }
 
@@ -447,7 +477,7 @@ public class HomeFragment extends Fragment {
             } else if (adsConfig.getMobileAdsNetwork().equalsIgnoreCase(Constants.START_APP)) {
                 BannerAds.showStartAppBanner(getContext(), adView);
 
-            } else if(adsConfig.getMobileAdsNetwork().equalsIgnoreCase(Constants.NETWORK_AUDIENCE)) {
+            } else if (adsConfig.getMobileAdsNetwork().equalsIgnoreCase(Constants.NETWORK_AUDIENCE)) {
                 BannerAds.showFANBanner(getContext(), adView);
                 BannerAds.showFANBanner(getContext(), adView1);
             }

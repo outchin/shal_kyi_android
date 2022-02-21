@@ -18,6 +18,7 @@
     <string name="latest_tv_series">Latest Tv Series</string>
     <string name="more">More</string>
     <string name="movie">Movies</string>
+    <string name="eighteen">ဆယ့်ရှစ် အပေါင်း</string>
     <string name="highlights">Highlights</string>
     <string name="live_tv">Live TV</string>
     <string name="tv_series">Series</string>
@@ -85,8 +86,10 @@
         <item>Live TV</item>
         <item>Genre</item>
         <item>Country</item>
-        <item>Login</item>
+        <item>ဆယ့်ရှစ် အပေါင်း</item>
+<!--        <item>Login</item>-->
         <item>Settings</item>
+        <item>Downloads</item>
     </string-array>
 
     <string-array name="nav_item_image_2">
@@ -96,7 +99,11 @@
         <item>outline_live_tv_24</item>
         <item>outline_folder_24</item>
         <item>outline_outlined_flag_24</item>
-        <item>outline_lock_24</item>
+        <item>outline_person_24</item>
+        <item>outline_settings_24</item>
+        <item>ic_file_download_black_24dp</item>
+
+<!--        <item>outline_lock_24</item>-->
         <item>outline_settings_24</item>
     </string-array>
 
@@ -288,9 +295,22 @@
     <string name="failed_to_communicate">Failed to communicate with server. \nPlease check your API configuration</string>
     <string name="no_configuration_data_found">No configuration data found.</string>
     <string name="please_login_first_to_see_favorite_list">Please subscribe to see your favorite list.</string>
+
+    <string name="need_to_subscribe_movie_pkg">ဤရုပ်ရှင်ကြည့်ရှုရန်အတွက် Premium Movie Package ၀ယ်ယူထားရန် လိုအပ်ပါသည်။</string>
+    <string name="need_to_subscribe_movie_pkg_eng">You need to subscribe Premium Movie Package to watch this movie.</string>
+
+    <string name="need_to_subscribe_movie_to_download">ဒေါင်းလော့ပြုလုပ်ရန်အတွက် Premium Movie Package ၀ယ်ယူထားရန် လိုအပ်ပါသည်။</string>
+    <string name="need_to_subscribe_movie_to_download_eng">You need to subscribe Premium Movie Package to download this movie.</string>
+
+    <string name="need_to_subscribe_all_pkg">ဤရုပ်ရှင်ကြည့်ရှုရန်အတွက် Premium All Package ၀ယ်ယူထားရန် လိုအပ်ပါသည်။</string>
+    <string name="need_to_subscribe_all_pkg_eng">You need to subscribe Premium All Package to watch this movie.</string>
+
+
     <string name="welcome_text">Welcome to MySpectrum</string>
     <string name="continue_bold"><b>Continue</b></string>
     <string name="buy_code_bold"><b>Code ဝယ်ရန်</b></string>
 
+    <string name="expiration_date">Expiration Date :</string>
+    <string name="subscription_type">Subscription Type :</string>
 
 </resources>

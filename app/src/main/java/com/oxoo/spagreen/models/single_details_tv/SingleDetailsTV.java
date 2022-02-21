@@ -30,6 +30,12 @@ public class SingleDetailsTV {
     @Expose
     private boolean is_free_user;
 
+    @SerializedName("is_eighteen")
+    @Expose
+    private String is_eighteen;
+
+
+
 
     public String getExpire_date() {
         return expire_date;
@@ -50,6 +56,15 @@ public class SingleDetailsTV {
     @SerializedName("is_paid")
     @Expose
     private String isPaid;
+
+    public String getIs_eighteen() {
+        return is_eighteen;
+    }
+
+    public void setIs_eighteen(String is_eighteen) {
+        this.is_eighteen = is_eighteen;
+    }
+
     @SerializedName("description")
     @Expose
     private String description;

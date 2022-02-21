@@ -46,9 +46,23 @@ public class SingleDetails {
     @SerializedName("video_quality")
     @Expose
     private String videoQuality;
+
     @SerializedName("is_tvseries")
     @Expose
     private String isTvseries;
+
+    @SerializedName("is_eighteen")
+    @Expose
+    private String isEighteen;
+
+    public String getIsEighteen() {
+        return isEighteen;
+    }
+
+    public void setIsEighteen(String isEighteen) {
+        this.isEighteen = isEighteen;
+    }
+
     @SerializedName("is_paid")
     @Expose
     private String isPaid;
